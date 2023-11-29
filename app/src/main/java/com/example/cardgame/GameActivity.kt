@@ -9,6 +9,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import org.w3c.dom.Text
 
@@ -19,6 +20,15 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        val theDeck = Deck()
+
+        val computerDeck = theDeck.getComputerDeck()
+        val computerPlayerDeck = theDeck.getComputerPlayerDeck()
+        val playerDeck = theDeck.getPlayerDeck()
+
+        val player = Player("Mattias")
+        val computerPlayer = Player("ComputerPlayer")
 
         //Define variables
         var displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
@@ -45,7 +55,7 @@ class GameActivity : AppCompatActivity() {
 
 
 
-
+        //Lock in correct answer
         initializeTextViews(
             listOf(
                 playerLockedAnswerJokerView,
@@ -75,7 +85,13 @@ class GameActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             //display first card in the deck
             displayedComputerCardView.setImageResource(android.R.color.transparent)
-            displayedComputerCardView.setBackgroundResource(R.drawable.spades2)
+
+            var displayThisCard = computerDeck[0]
+
+            val imageName = displayThisCard.imageName
+            val resID = resources.getIdentifier(imageName, "drawable", packageName)
+            displayedComputerCardView.setBackgroundResource(resID)
+            displayedComputerCardView.isVisible = true
         }, 3000)
 
     }
