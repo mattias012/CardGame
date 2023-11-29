@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cardgamebackground_light"
+    tools:context=".GameActivity"
+    tools:layout_editor_absoluteX="-1dp"
+    tools:layout_editor_absoluteY="-20dp">
+
+    <TextView
+        android:id="@+id/computerLockedAnswerJoker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="#C1C1C1"
+        android:padding="8dp"
+        android:text="JOKER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/computerLockedAnswerHigher"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/computerLockedAnswerLower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="19dp"
+        android:background="#C1C1C1"
+        android:padding="8dp"
+        android:text="LOWER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/computerCoverCard"
+        app:layout_constraintEnd_toStartOf="@+id/computerLockedAnswerHigher" />
+
+    <TextView
+        android:id="@+id/computerLockedAnswerHigher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="19dp"
+        android:background="#C1C1C1"
+        android:padding="8dp"
+        android:text="HIGHER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/computerCoverCard"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/playerLockedAnswerLower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="12dp"
+        android:background="#C1C1C1"
+        android:padding="8dp"
+        android:text="LOWER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/displayedPlayerCard"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/playerLockedAnswerHigher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginBottom="12dp"
+        android:background="#C1C1C1"
+        android:padding="8dp"
+        android:text="HIGHER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/displayedPlayerCard"
+        app:layout_constraintStart_toEndOf="@+id/playerLockedAnswerLower" />
+
+    <TextView
+        android:id="@+id/playerLockedAnswerJoker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="#C1C1C1"
+        android:padding="8dp"
+        android:text="JOKER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/playerLockedAnswerHigher"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/scoreComputerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:text="Score: 0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/computerCoverCard" />
+
+    <ImageView
+        android:id="@+id/displayedComputerCard"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/clubs5" />
+
+    <ImageView
+        android:id="@+id/covercardBottom"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="71dp"
+        app:layout_constraintEnd_toStartOf="@+id/displayedComputerCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
+        android:id="@+id/covercardMiddle"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
+        android:id="@+id/covercardTop"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="95dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="What will next card be? Lock in your answer"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayedComputerCard" />
+
+    <TextView
+        android:id="@+id/cardsLeftBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/playerCoverCard"
+        android:layout_width="159dp"
+        android:layout_height="201dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
+        android:id="@+id/displayedPlayerCard"
+        android:layout_width="159dp"
+        android:layout_height="201dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
+        android:id="@+id/computerCoverCard"
+        android:layout_width="159dp"
+        android:layout_height="201dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
+        android:id="@+id/displayedComputerPlayerCard"
+        android:layout_width="159dp"
+        android:layout_height="201dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <TextView
+        android:id="@+id/scorePlayerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="Score: 0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
