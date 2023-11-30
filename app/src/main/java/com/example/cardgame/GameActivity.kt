@@ -32,6 +32,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var robot: ImageView
     lateinit var robotTextView: TextView
     lateinit var tapImageView: ImageView
+    lateinit var closeImageView: ImageView
 
     var playerLockedAnswerJokerView: TextView? = null
     var playerLockedAnswerLowerView: TextView? = null
@@ -44,11 +45,11 @@ class GameActivity : AppCompatActivity() {
     var computerLockedAnswerMatchView: TextView? = null
 //    val cardsLeftBoxView: TextView? = null
 
-    val theDeck = Deck()
+    private val theDeck = Deck()
 
-    val computerDeck = theDeck.getComputerDeck()
-    val computerPlayerDeck = theDeck.getComputerPlayerDeck()
-    val playerDeck = theDeck.getPlayerDeck()
+    private val computerDeck = theDeck.getComputerDeck()
+    private val computerPlayerDeck = theDeck.getComputerPlayerDeck()
+    private val playerDeck = theDeck.getPlayerDeck()
 
     val player = Player("Mattias")
     val computerPlayer = Player("ComputerPlayer")
@@ -59,6 +60,13 @@ class GameActivity : AppCompatActivity() {
 
 
         //Define variables
+
+        closeImageView = findViewById<ImageView>(R.id.closeImageView)
+
+        closeImageView.setOnClickListener{
+            finish()
+        }
+
         displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
 
         val coverCardBottomView = findViewById<ImageView>(R.id.covercardBottom)
@@ -136,11 +144,12 @@ class GameActivity : AppCompatActivity() {
             //display first card in the deck
             displayedComputerCardView.setImageResource(android.R.color.transparent)
 
-            val displayThisCard = computerDeck.removeAt(0)
-
-            val imageName = displayThisCard.imageName
-            val resID = resources.getIdentifier(imageName, "drawable", packageName)
-            displayedComputerCardView.setBackgroundResource(resID)
+//            val displayThisCard = computerDeck.removeAt(0)
+//
+//            val imageName = displayThisCard.imageName
+//            val resID = resources.getIdentifier(imageName, "drawable", packageName)
+//            displayedComputerCardView.setBackgroundResource(resID)
+            displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
             displayedComputerCardView.isVisible = true
 
             showRemainingCards()

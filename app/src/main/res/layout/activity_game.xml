@@ -255,29 +255,17 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="355dp" />
 
-    <ImageView
-        android:id="@+id/tipImageView"
-        android:layout_width="24dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="3dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/idea" />
-
     <TextView
         android:id="@+id/tipView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:layout_marginBottom="2dp"
         android:text="The questions is what will your next cover card?"
         android:textSize="12dp"
         android:textStyle="italic"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintStart_toEndOf="@+id/tipImageView" />
+        tools:layout_editor_absoluteX="35dp" />
 
     <ImageView
         android:id="@+id/robotImageView"
@@ -310,14 +298,25 @@
         android:id="@+id/tapImageView"
         android:layout_width="40dp"
         android:layout_height="38dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="15dp"
         android:rotation="-30"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/displayedComputerCard"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/tap"
         tools:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/closeImageView"
+        android:layout_width="39dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/close" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
