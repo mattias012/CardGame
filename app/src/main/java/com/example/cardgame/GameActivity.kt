@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,22 +17,24 @@ import org.w3c.dom.Text
 class GameActivity : AppCompatActivity() {
 
     var selectedLockedAnswer: TextView? = null
+    lateinit var displayedComputerCardView : ImageView
+
+    val theDeck = Deck()
+
+    val computerDeck = theDeck.getComputerDeck()
+    val computerPlayerDeck = theDeck.getComputerPlayerDeck()
+    val playerDeck = theDeck.getPlayerDeck()
+
+    val player = Player("Mattias")
+    val computerPlayer = Player("ComputerPlayer")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val theDeck = Deck()
-
-        val computerDeck = theDeck.getComputerDeck()
-        val computerPlayerDeck = theDeck.getComputerPlayerDeck()
-        val playerDeck = theDeck.getPlayerDeck()
-
-        val player = Player("Mattias")
-        val computerPlayer = Player("ComputerPlayer")
 
         //Define variables
-        var displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
+        displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
         val coverCardBottomView = findViewById<ImageView>(R.id.covercardBottom)
         val coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
         val coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
@@ -55,7 +58,7 @@ class GameActivity : AppCompatActivity() {
 
 
 
-        //Lock in correct answer
+        //Lock in answer
         initializeTextViews(
             listOf(
                 playerLockedAnswerJokerView,
@@ -63,18 +66,22 @@ class GameActivity : AppCompatActivity() {
                 playerLockedAnswerHigherView
             )
         )
-        //setAndTagColor(playerLockedAnswerJokerView, "#C1C1C1")
 
         playerLockedAnswerJokerView.setOnClickListener {
-            toggleLock(it as TextView)
+            lockAnswer(it as TextView)
         }
         playerLockedAnswerLowerView.setOnClickListener {
-            toggleLock(it as TextView)
+            lockAnswer(it as TextView)
         }
         playerLockedAnswerHigherView.setOnClickListener {
-            toggleLock(it as TextView)
+            lockAnswer(it as TextView)
         }
 
+        showFirstCard()
+
+    }
+
+    private fun showFirstCard(){
 
         //Load gif of shuffled card
         val imageResource = R.drawable.shuffle
@@ -87,6 +94,7 @@ class GameActivity : AppCompatActivity() {
             displayedComputerCardView.setImageResource(android.R.color.transparent)
 
             var displayThisCard = computerDeck[0]
+            Log.d("!!!", "${displayThisCard.imageName}")
 
             val imageName = displayThisCard.imageName
             val resID = resources.getIdentifier(imageName, "drawable", packageName)
@@ -96,23 +104,23 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun toggleLock(selection: TextView) {
-        selectedLockedAnswer?.let {
-            if (it != selection) {
-                setAndTagColor(it, "#C1C1C1")
-                selectedLockedAnswer = null
-            }
-        }
+    private fun lockAnswer(selection: TextView) {
+//        selectedLockedAnswer?.let {
+//            if (it != selection) {
+//                setAndTagColor(it, "#C1C1C1")
+//                selectedLockedAnswer = null
+//            }
+//        }
 
         if (selectedLockedAnswer == null) {
             setAndTagColor(selection, "#E86F6F")
             selectedLockedAnswer = selection
 
         }
-        else if (selection.tag == "#E86F6F") {
-            setAndTagColor(selection, "#C1C1C1")
-            selectedLockedAnswer = null
-        }
+//        else if (selection.tag == "#E86F6F") {
+//            setAndTagColor(selection, "#C1C1C1")
+//            selectedLockedAnswer = null
+//        }
     }
 
     private fun setAndTagColor(selection: TextView, color: String) {

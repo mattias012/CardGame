@@ -4,7 +4,7 @@ class Deck() {
 
     private val theDeck = mutableListOf<Card>()
     private val values = listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
-    private val suits = listOf("hearts", "diamonds", "clubs", "spades")
+    private val suits = listOf("hearts", "diamond", "clubs", "spades")
 
 
     private var computerDeck = mutableListOf<Card>()
@@ -61,20 +61,11 @@ class Deck() {
             }
         }
 
-        setComputerDeck(computerDeck)
-        setComputerPlayerDeck(computerPlayerDeck)
-        setPlayerDeck(playerDeck)
+        this.computerDeck = computerDeck
+        this.computerPlayerDeck = computerPlayerDeck
+        this.playerDeck = playerDeck
     }
 
-    private fun setComputerDeck(thisDeck: MutableList<Card>){
-        this.computerDeck = thisDeck
-    }
-    private fun setComputerPlayerDeck(thisDeck: MutableList<Card>){
-        this.computerPlayerDeck = thisDeck
-    }
-    private fun setPlayerDeck(thisDeck: MutableList<Card>){
-        this.playerDeck = thisDeck
-    }
     fun getComputerDeck() : MutableList<Card> {
         return this.computerDeck
     }

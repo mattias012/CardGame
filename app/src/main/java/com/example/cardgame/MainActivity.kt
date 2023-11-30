@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, GameActivity::class.java)
         intent.putExtra("playerName", playerName)
-
+        //Flagga för att cleara minnet
         startActivity(intent)
     }
 
