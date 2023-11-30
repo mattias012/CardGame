@@ -16,8 +16,15 @@ import org.w3c.dom.Text
 
 class GameActivity : AppCompatActivity() {
 
-    var selectedLockedAnswer: TextView? = null
+    var selectedLockedAnswerButton: TextView? = null
+    var selectedAnswer: String = ""
     lateinit var displayedComputerCardView : ImageView
+
+    var playerLockedAnswerJokerView: TextView? = null
+    var playerLockedAnswerLowerView: TextView? = null
+    var playerLockedAnswerHigherView: TextView? = null
+
+//    val cardsLeftBoxView: TextView? = null
 
     val theDeck = Deck()
 
@@ -39,9 +46,15 @@ class GameActivity : AppCompatActivity() {
         val coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
         val coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
 
-        val playerLockedAnswerJokerView = findViewById<TextView>(R.id.playerLockedAnswerJoker)
-        val playerLockedAnswerLowerView = findViewById<TextView>(R.id.playerLockedAnswerLower)
-        val playerLockedAnswerHigherView = findViewById<TextView>(R.id.playerLockedAnswerHigher)
+         playerLockedAnswerJokerView = findViewById<TextView>(R.id.playerLockedAnswerJoker)
+         playerLockedAnswerLowerView = findViewById<TextView>(R.id.playerLockedAnswerLower)
+         playerLockedAnswerHigherView = findViewById<TextView>(R.id.playerLockedAnswerHigher)
+
+        val cardsLeftBoxView = findViewById<TextView>(R.id.cardsLeftBox)
+        cardsLeftBoxView.text = "${computerDeck.size} cards left"
+
+
+
 
         val computerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
         val computerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
@@ -58,26 +71,21 @@ class GameActivity : AppCompatActivity() {
 
 
 
-        //Lock in answer
-        initializeTextViews(
-            listOf(
-                playerLockedAnswerJokerView,
-                playerLockedAnswerLowerView,
-                playerLockedAnswerHigherView
-            )
-        )
-
-        playerLockedAnswerJokerView.setOnClickListener {
-            lockAnswer(it as TextView)
-        }
-        playerLockedAnswerLowerView.setOnClickListener {
-            lockAnswer(it as TextView)
-        }
-        playerLockedAnswerHigherView.setOnClickListener {
-            lockAnswer(it as TextView)
-        }
-
+        //"Shuffle" and display first card by dealer
         showFirstCard()
+
+        //Lock in answer
+        playerLockedAnswerJokerView?.setOnClickListener {
+            lockAnswer(it as TextView, "joker")
+        }
+        playerLockedAnswerLowerView?.setOnClickListener {
+            lockAnswer(it as TextView, "lower")
+        }
+        playerLockedAnswerHigherView?.setOnClickListener {
+            lockAnswer(it as TextView, "higher")
+        }
+
+
 
     }
 
@@ -93,34 +101,68 @@ class GameActivity : AppCompatActivity() {
             //display first card in the deck
             displayedComputerCardView.setImageResource(android.R.color.transparent)
 
-            var displayThisCard = computerDeck[0]
+            val displayThisCard = computerDeck.removeAt(0)
+
             Log.d("!!!", "${displayThisCard.imageName}")
 
             val imageName = displayThisCard.imageName
             val resID = resources.getIdentifier(imageName, "drawable", packageName)
             displayedComputerCardView.setBackgroundResource(resID)
             displayedComputerCardView.isVisible = true
+
         }, 3000)
 
     }
 
-    private fun lockAnswer(selection: TextView) {
-//        selectedLockedAnswer?.let {
-//            if (it != selection) {
-//                setAndTagColor(it, "#C1C1C1")
-//                selectedLockedAnswer = null
-//            }
-//        }
+    private fun showNextCard() {
 
-        if (selectedLockedAnswer == null) {
-            setAndTagColor(selection, "#E86F6F")
-            selectedLockedAnswer = selection
+        if (computerDeck.isNotEmpty()) {
+
+            val nextCard = computerDeck.removeAt(0)
+
+            displayedComputerCardView.setImageResource(android.R.color.transparent)
+
+            val imageName = nextCard.imageName
+            val resID = resources.getIdentifier(imageName, "drawable", packageName)
+            displayedComputerCardView.setBackgroundResource(resID)
+            displayedComputerCardView.isVisible = true
+
+            Log.d("!!!", "${nextCard.imageName}")
+
+            //Clear answer (set color tag)
+            clearAnswer()
+        }
+        else{
+            //send to winner page
+        }
+
+    }
+
+    private fun clearAnswer(){
+
+        if (selectedLockedAnswerButton != null) {
+
+            val nonNullTextViews = listOf(playerLockedAnswerJokerView, playerLockedAnswerLowerView, playerLockedAnswerHigherView).filterNotNull()
+            initializeTextViews(nonNullTextViews)
+
+//            initializeTextViews(listOf(playerLockedAnswerJokerView, playerLockedAnswerLowerView, playerLockedAnswerHigherView))
+            selectedLockedAnswerButton = null
+            selectedAnswer = ""
 
         }
-//        else if (selection.tag == "#E86F6F") {
-//            setAndTagColor(selection, "#C1C1C1")
-//            selectedLockedAnswer = null
-//        }
+    }
+    private fun lockAnswer(selection: TextView, nameOfAnswer: String) {
+
+
+        if (selectedLockedAnswerButton == null) {
+            setAndTagColor(selection, "#E86F6F")
+            selectedLockedAnswerButton = selection
+            selectedAnswer = nameOfAnswer
+
+
+            //show next card for dealer
+            showNextCard()
+        }
     }
 
     private fun setAndTagColor(selection: TextView, color: String) {
