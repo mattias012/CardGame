@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import org.w3c.dom.Text
@@ -69,6 +70,8 @@ class GameActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.displayedComputerPlayerCard)
         var computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
 
+        //Clear answer (set color tag)
+        clearAnswer()
 
 
         //"Shuffle" and display first card by dealer
@@ -130,9 +133,12 @@ class GameActivity : AppCompatActivity() {
             Log.d("!!!", "${nextCard.imageName}")
 
             //Clear answer (set color tag)
-            clearAnswer()
+            Handler(Looper.getMainLooper()).postDelayed({
+                clearAnswer()
+            }, 2000)
+
         }
-        else{
+        else {
             //send to winner page
         }
 
@@ -145,7 +151,6 @@ class GameActivity : AppCompatActivity() {
             val nonNullTextViews = listOf(playerLockedAnswerJokerView, playerLockedAnswerLowerView, playerLockedAnswerHigherView).filterNotNull()
             initializeTextViews(nonNullTextViews)
 
-//            initializeTextViews(listOf(playerLockedAnswerJokerView, playerLockedAnswerLowerView, playerLockedAnswerHigherView))
             selectedLockedAnswerButton = null
             selectedAnswer = ""
 
@@ -158,7 +163,6 @@ class GameActivity : AppCompatActivity() {
             setAndTagColor(selection, "#E86F6F")
             selectedLockedAnswerButton = selection
             selectedAnswer = nameOfAnswer
-
 
             //show next card for dealer
             showNextCard()
