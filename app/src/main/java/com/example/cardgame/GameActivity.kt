@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.postDelayed
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import org.w3c.dom.Text
@@ -20,19 +22,22 @@ class GameActivity : AppCompatActivity() {
     var selectedLockedAnswerButton: TextView? = null
     var selectedAnswer: String = ""
 
-    lateinit var displayedComputerCardView : ImageView
-    lateinit var displayedPlayerCardView : ImageView
+    lateinit var displayedComputerCardView: ImageView
+    lateinit var displayedPlayerCardView: ImageView
     lateinit var displayedComputerPlayerCardView: ImageView
     lateinit var cardsLeftBoxView: TextView
+    lateinit var robot: ImageView
+    lateinit var robotTextView: TextView
+    lateinit var tapImageView: ImageView
 
     var playerLockedAnswerJokerView: TextView? = null
     var playerLockedAnswerLowerView: TextView? = null
     var playerLockedAnswerHigherView: TextView? = null
     var playerLockedAnswerMatchView: TextView? = null
 
-    var  computerPlayerLockedAnswerJokerView : TextView? = null
-    var computerPlayerLockedAnswerLowerView : TextView? = null
-    var  computerPlayerLockedAnswerHigherView : TextView? = null
+    var computerPlayerLockedAnswerJokerView: TextView? = null
+    var computerPlayerLockedAnswerLowerView: TextView? = null
+    var computerPlayerLockedAnswerHigherView: TextView? = null
 
 //    val cardsLeftBoxView: TextView? = null
 
@@ -57,28 +62,35 @@ class GameActivity : AppCompatActivity() {
         val coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
         val coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
 
-         playerLockedAnswerJokerView = findViewById<TextView>(R.id.playerLockedAnswerJoker)
-         playerLockedAnswerLowerView = findViewById<TextView>(R.id.playerLockedAnswerLower)
-         playerLockedAnswerHigherView = findViewById<TextView>(R.id.playerLockedAnswerHigher)
+        playerLockedAnswerJokerView = findViewById<TextView>(R.id.playerLockedAnswerJoker)
+        playerLockedAnswerLowerView = findViewById<TextView>(R.id.playerLockedAnswerLower)
+        playerLockedAnswerHigherView = findViewById<TextView>(R.id.playerLockedAnswerHigher)
         playerLockedAnswerMatchView = findViewById<TextView>(R.id.playerLockedAnswerMatch)
 
         cardsLeftBoxView = findViewById<TextView>(R.id.cardsLeftBox)
 
 
-         computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
-         computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
-         computerPlayerLockedAnswerHigherView = findViewById<TextView>(R.id.computerLockedAnswerHigher)
+        robot = findViewById<ImageView>(R.id.robotImageView)
+        robotTextView = findViewById<TextView>(R.id.questionTextView)
+
+        tapImageView = findViewById<ImageView>(R.id.tapImageView)
+
+        computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
+        computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
+        computerPlayerLockedAnswerHigherView =
+            findViewById<TextView>(R.id.computerLockedAnswerHigher)
 
         val playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
-         displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
+        displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
         var playerScoreView = findViewById<TextView>(R.id.scorePlayerTextView)
 
         val computerCoverCardView = findViewById<ImageView>(R.id.computerCoverCard)
-         displayedComputerPlayerCardView = findViewById<ImageView>(R.id.displayedComputerPlayerCard)
+        displayedComputerPlayerCardView = findViewById<ImageView>(R.id.displayedComputerPlayerCard)
         var computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
 
         //Clear answer (set color tag)
         clearAnswer()
+        hideRobot()
 
 
         //"Shuffle" and display first card by dealer
@@ -97,13 +109,15 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun checkWin(){
+    private fun checkWin() {
         selectedAnswer
     }
-    private fun showRemainingCards(){
+
+    private fun showRemainingCards() {
         cardsLeftBoxView.text = "${computerDeck.size} cards left"
     }
-    private fun showFirstCard(){
+
+    private fun showFirstCard() {
 
         //Load gif of shuffled card
         val imageResource = R.drawable.shuffle
@@ -123,12 +137,12 @@ class GameActivity : AppCompatActivity() {
             displayedComputerCardView.isVisible = true
 
             showRemainingCards()
-
+            showRobot()
         }, 3000)
 
     }
 
-    private fun showPlayerNextCard(){
+    private fun showPlayerNextCard() {
         if (playerDeck.isNotEmpty()) {
 
             val nextCard = playerDeck.removeAt(0)
@@ -142,7 +156,8 @@ class GameActivity : AppCompatActivity() {
         }
 
     }
-    private fun showComputerPlayerCard(){
+
+    private fun showComputerPlayerCard() {
         if (computerPlayerDeck.isNotEmpty()) {
 
             val nextCard = computerPlayerDeck.removeAt(0)
@@ -155,7 +170,8 @@ class GameActivity : AppCompatActivity() {
             displayedComputerPlayerCardView.isVisible = true
         }
     }
-    private fun showNextCard() {
+
+    private fun showNextCardByDealer() {
 
         if (computerDeck.isNotEmpty()) {
 
@@ -168,39 +184,90 @@ class GameActivity : AppCompatActivity() {
             displayedComputerCardView.setBackgroundResource(resID)
             displayedComputerCardView.isVisible = true
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                showComputerPlayerCard()
-            }, 1000)
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                showPlayerNextCard()
-            }, 2000)
-
-            //Clear answer (set color tag)
-            Handler(Looper.getMainLooper()).postDelayed({
-                clearAnswer()
-            }, 3000)
-
             showRemainingCards()
-        }
-        else {
+
+            if (computerDeck.size > 17) {
+                tapImageView.isVisible = true
+                Handler(Looper.getMainLooper()).postDelayed({
+                    tapImageView.isVisible = false
+                }, 2000)
+            }
+
+        } else {
             //send to winner page
         }
 
     }
 
-    private fun clearAnswer(){
+    private fun clearAnswer() {
 
         if (selectedLockedAnswerButton != null) {
 
-            val nonNullTextViews = listOf(playerLockedAnswerJokerView, playerLockedAnswerLowerView, playerLockedAnswerHigherView, playerLockedAnswerMatchView).filterNotNull()
+            val nonNullTextViews = listOf(
+                playerLockedAnswerJokerView,
+                playerLockedAnswerLowerView,
+                playerLockedAnswerHigherView,
+                playerLockedAnswerMatchView
+            ).filterNotNull()
             initializeTextViews(nonNullTextViews)
 
             selectedLockedAnswerButton = null
             selectedAnswer = ""
 
         }
+        //"Throw away" used cards, display cover cards
+        throwAwayCards()
     }
+
+    private fun throwAwayCards(){
+
+        hideRobot()
+
+        displayedComputerPlayerCardView.setImageResource(android.R.color.transparent)
+        displayedPlayerCardView.setImageResource(android.R.color.transparent)
+        displayedComputerCardView.setImageResource(android.R.color.transparent)
+
+        displayedPlayerCardView.setBackgroundResource(R.drawable.covercard)
+        displayedComputerPlayerCardView.setBackgroundResource(R.drawable.covercard)
+        displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
+    }
+
+    private fun displayCoverCards(){
+
+        //Ok so now display both players cards
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            showComputerPlayerCard()
+        }, 2000)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            showPlayerNextCard()
+        }, 3000)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            showNextCardByDealer()
+        }, 5000)
+
+    }
+
+    //Clear answer (set color tag)
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        if (event?.action == MotionEvent.ACTION_UP) {
+            clearAnswer()
+        }
+
+        return true
+    }
+    private fun showRobot(){
+        robot.isVisible = true
+        robotTextView.isVisible = true
+    }
+    private fun hideRobot(){
+        robot.isVisible = false
+        robotTextView.isVisible = false
+    }
+
     private fun lockAnswer(selection: TextView, nameOfAnswer: String) {
 
 
@@ -209,8 +276,8 @@ class GameActivity : AppCompatActivity() {
             selectedLockedAnswerButton = selection
             selectedAnswer = nameOfAnswer
 
-            //show next card for dealer
-            showNextCard()
+            //display cover cards
+            displayCoverCards()
         }
     }
 
