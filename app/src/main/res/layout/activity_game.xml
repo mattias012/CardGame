@@ -10,42 +10,57 @@
     tools:layout_editor_absoluteY="-20dp">
 
     <TextView
+        android:id="@+id/computerPlayerLockedAnswerMatch"
+        android:layout_width="82dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="12dp"
+        android:background="#EAE7E7"
+        android:padding="8dp"
+        android:text="MATCH\nDealer"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/computerLockedAnswerLower"
+        app:layout_constraintEnd_toStartOf="@+id/computerLockedAnswerJoker" />
+
+    <TextView
+        android:id="@+id/playerLockedAnswerMatch"
+        android:layout_width="88dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginBottom="12dp"
+        android:background="#EAE7E7"
+        android:padding="8dp"
+        android:text="MATCH\nDealer"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/playerLockedAnswerHigher"
+        app:layout_constraintStart_toEndOf="@+id/playerLockedAnswerJoker" />
+
+    <TextView
         android:id="@+id/computerLockedAnswerJoker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="16dp"
-        android:background="#C1C1C1"
+        android:layout_width="86dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="12dp"
+        android:background="#EAE7E7"
         android:padding="8dp"
         android:text="JOKER"
         android:textAlignment="center"
-        android:textSize="20dp"
+        android:textSize="21dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/computerLockedAnswerHigher"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/computerLockedAnswerLower"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp"
-        android:layout_marginBottom="19dp"
-        android:background="#C1C1C1"
-        android:padding="8dp"
-        android:text="LOWER"
-        android:textAlignment="center"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/computerCoverCard"
-        app:layout_constraintEnd_toStartOf="@+id/computerLockedAnswerHigher" />
-
-    <TextView
         android:id="@+id/computerLockedAnswerHigher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="19dp"
-        android:background="#C1C1C1"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="32dp"
+        android:background="#EAE7E7"
         android:padding="8dp"
         android:text="HIGHER"
         android:textAlignment="center"
@@ -55,12 +70,27 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
+        android:id="@+id/computerLockedAnswerLower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="32dp"
+        android:background="#EAE7E7"
+        android:padding="8dp"
+        android:text="LOWER"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/computerCoverCard"
+        app:layout_constraintEnd_toStartOf="@+id/computerLockedAnswerHigher" />
+
+    <TextView
         android:id="@+id/playerLockedAnswerLower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginBottom="12dp"
-        android:background="#C1C1C1"
+        android:layout_marginBottom="25dp"
+        android:background="#EAE7E7"
         android:padding="8dp"
         android:text="LOWER"
         android:textAlignment="center"
@@ -74,8 +104,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
-        android:layout_marginBottom="12dp"
-        android:background="#C1C1C1"
+        android:layout_marginBottom="25dp"
+        android:background="#EAE7E7"
         android:padding="8dp"
         android:text="HIGHER"
         android:textAlignment="center"
@@ -86,15 +116,15 @@
 
     <TextView
         android:id="@+id/playerLockedAnswerJoker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginBottom="16dp"
-        android:background="#C1C1C1"
+        android:layout_width="83dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="12dp"
+        android:background="#EAE7E7"
         android:padding="8dp"
         android:text="JOKER"
         android:textAlignment="center"
-        android:textSize="20dp"
+        android:textSize="21dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/playerLockedAnswerHigher"
         app:layout_constraintStart_toStartOf="parent" />
@@ -123,7 +153,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="80dp"
         app:layout_constraintEnd_toStartOf="@+id/displayedComputerCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -134,7 +164,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="90dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/covercard" />
@@ -144,31 +174,19 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/covercard" />
 
-    <TextView
-        android:id="@+id/questionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="What will next card be? Lock in your answer"
-        android:textAlignment="center"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/displayedComputerCard" />
+
 
     <TextView
         android:id="@+id/cardsLeftBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="25"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="52dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -183,8 +201,8 @@
 
     <ImageView
         android:id="@+id/displayedPlayerCard"
-        android:layout_width="159dp"
-        android:layout_height="201dp"
+        android:layout_width="179dp"
+        android:layout_height="202dp"
         android:layout_marginStart="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -202,8 +220,8 @@
 
     <ImageView
         android:id="@+id/displayedComputerPlayerCard"
-        android:layout_width="159dp"
-        android:layout_height="201dp"
+        android:layout_width="179dp"
+        android:layout_height="202dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -219,5 +237,71 @@
         android:text="Score: 0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="355dp" />
+
+    <ImageView
+        android:id="@+id/tipImageView"
+        android:layout_width="24dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/idea" />
+
+    <TextView
+        android:id="@+id/tipView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="2dp"
+        android:text="The questions is what will your next cover card?"
+        android:textSize="12dp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintStart_toEndOf="@+id/tipImageView" />
+
+    <ImageView
+        android:id="@+id/robotImageView"
+        android:layout_width="61dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/robot" />
+
+    <ImageView
+        android:id="@+id/robotTipTextView"
+        android:layout_width="400dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/talk" />
+
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="228dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="77dp"
+        android:layout_marginBottom="2dp"
+        android:text="What will your next card be?\nMatch the dealer for 3 points! Lock in your answer"
+        android:textAlignment="center"
+        android:textSize="13dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/robotTipTextView"
+        app:layout_constraintEnd_toEndOf="@+id/robotTipTextView"
+        app:layout_constraintStart_toStartOf="@+id/robotTipTextView"
+        app:layout_constraintTop_toTopOf="@+id/robotTipTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
