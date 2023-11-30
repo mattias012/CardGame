@@ -22,6 +22,9 @@ class GameActivity : AppCompatActivity() {
     var selectedLockedAnswerButton: TextView? = null
     var selectedAnswer: String = ""
 
+    var selectedLockedAnswerButtonComputerPlayer: TextView? = null
+    var selectedAnswerComputerPlayer: String = ""
+
     lateinit var displayedComputerCardView: ImageView
     lateinit var displayedPlayerCardView: ImageView
     lateinit var displayedComputerPlayerCardView: ImageView
@@ -38,7 +41,7 @@ class GameActivity : AppCompatActivity() {
     var computerPlayerLockedAnswerJokerView: TextView? = null
     var computerPlayerLockedAnswerLowerView: TextView? = null
     var computerPlayerLockedAnswerHigherView: TextView? = null
-
+    var computerLockedAnswerMatchView: TextView? = null
 //    val cardsLeftBoxView: TextView? = null
 
     val theDeck = Deck()
@@ -79,6 +82,7 @@ class GameActivity : AppCompatActivity() {
         computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
         computerPlayerLockedAnswerHigherView =
             findViewById<TextView>(R.id.computerLockedAnswerHigher)
+        computerLockedAnswerMatchView = findViewById<TextView>(R.id.computerPlayerLockedAnswerMatch)
 
         val playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
         displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
@@ -105,6 +109,9 @@ class GameActivity : AppCompatActivity() {
         }
         playerLockedAnswerHigherView?.setOnClickListener {
             lockAnswer(it as TextView, "higher")
+        }
+        playerLockedAnswerMatchView?.setOnClickListener {
+            lockAnswer(it as TextView, "match")
         }
 
     }
@@ -154,7 +161,6 @@ class GameActivity : AppCompatActivity() {
             displayedPlayerCardView.setBackgroundResource(resID)
             displayedPlayerCardView.isVisible = true
         }
-
     }
 
     private fun showComputerPlayerCard() {
@@ -186,15 +192,15 @@ class GameActivity : AppCompatActivity() {
 
             showRemainingCards()
 
-            if (computerDeck.size > 17) {
-                tapImageView.isVisible = true
-                Handler(Looper.getMainLooper()).postDelayed({
-                    tapImageView.isVisible = false
-                }, 2000)
-            }
+//            if (computerDeck.size > 17) {
+//                tapImageView.isVisible = true
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    tapImageView.isVisible = false
+//                }, 2000)
+//            }
 
         } else {
-            //send to winner page
+            //send to winner page?
         }
 
     }
@@ -207,19 +213,25 @@ class GameActivity : AppCompatActivity() {
                 playerLockedAnswerJokerView,
                 playerLockedAnswerLowerView,
                 playerLockedAnswerHigherView,
-                playerLockedAnswerMatchView
+                playerLockedAnswerMatchView,
+                computerLockedAnswerMatchView,
+                computerPlayerLockedAnswerJokerView,
+                computerPlayerLockedAnswerHigherView,
+                computerPlayerLockedAnswerLowerView
             ).filterNotNull()
             initializeTextViews(nonNullTextViews)
 
             selectedLockedAnswerButton = null
+            selectedLockedAnswerButtonComputerPlayer = null
             selectedAnswer = ""
+            selectedAnswerComputerPlayer = ""
 
         }
         //"Throw away" used cards, display cover cards
         throwAwayCards()
     }
 
-    private fun throwAwayCards(){
+    private fun throwAwayCards() {
 
         hideRobot()
 
@@ -232,7 +244,7 @@ class GameActivity : AppCompatActivity() {
         displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
     }
 
-    private fun displayCoverCards(){
+    private fun displayCoverCards() {
 
         //Ok so now display both players cards
 
@@ -259,37 +271,69 @@ class GameActivity : AppCompatActivity() {
 
         return true
     }
-    private fun showRobot(){
+
+    private fun showRobot() {
         robot.isVisible = true
         robotTextView.isVisible = true
     }
-    private fun hideRobot(){
+
+    private fun hideRobot() {
         robot.isVisible = false
         robotTextView.isVisible = false
+
     }
 
     private fun lockAnswer(selection: TextView, nameOfAnswer: String) {
-
-
         if (selectedLockedAnswerButton == null) {
-            setAndTagColor(selection, "#E86F6F")
+            setAndTagAlpha(selection, 1f)
             selectedLockedAnswerButton = selection
             selectedAnswer = nameOfAnswer
+
+            computerSelectAnswer()?.let { lockAnswerComputerPlayer(it) }
 
             //display cover cards
             displayCoverCards()
         }
     }
 
-    private fun setAndTagColor(selection: TextView, color: String) {
-        selection.setBackgroundColor(Color.parseColor(color))
-        selection.tag = color
+    private fun lockAnswerComputerPlayer(selection: TextView) {
+        if (selectedLockedAnswerButtonComputerPlayer == null) {
+            setAndTagAlpha(selection, 1f)
+            selectedLockedAnswerButtonComputerPlayer = selection
+
+            when (selection) {
+                computerPlayerLockedAnswerJokerView -> selectedAnswerComputerPlayer = "joker"
+                computerPlayerLockedAnswerLowerView -> selectedAnswerComputerPlayer = "lower"
+                computerPlayerLockedAnswerHigherView -> selectedAnswerComputerPlayer = "higher"
+                computerLockedAnswerMatchView -> selectedAnswerComputerPlayer = "match"
+                else -> selectedAnswerComputerPlayer = "joker"
+            }
+        }
+    }
+
+    private fun setAndTagAlpha(selection: TextView, alpha: Float) {
+        selection.alpha = alpha
+        selection.setTag(alpha)
     }
 
     private fun initializeTextViews(textViews: List<TextView>) {
         for (textView in textViews) {
-            setAndTagColor(textView, "#C1C1C1")
+            setAndTagAlpha(textView, 0.5f)
         }
+    }
+
+    private fun computerSelectAnswer(): TextView? {
+        var thisAnswer = (1..4).random()
+
+        when (thisAnswer) {
+            1 -> return computerPlayerLockedAnswerJokerView
+            2 -> return computerPlayerLockedAnswerLowerView
+            3 -> return computerPlayerLockedAnswerHigherView
+            4 -> return computerLockedAnswerMatchView
+
+            else -> computerPlayerLockedAnswerJokerView
+        }
+        return computerPlayerLockedAnswerJokerView
     }
 
 }
