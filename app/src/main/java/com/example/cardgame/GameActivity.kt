@@ -15,12 +15,17 @@ import android.widget.TextView
 import androidx.core.os.postDelayed
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import org.w3c.dom.Text
 
 class GameActivity : AppCompatActivity() {
 
     val handler = Handler(Looper.getMainLooper())
+
+    private lateinit var animationView: LottieAnimationView
+
+
 
     private var selectedLockedAnswerButton: TextView? = null
     private var selectedAnswer: String = ""
@@ -34,7 +39,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var cardsLeftBoxView: TextView
     private lateinit var robot: ImageView
     private lateinit var robotTextView: TextView
-    private lateinit var tapImageView: ImageView
     private lateinit var closeImageView: ImageView
     private lateinit var playerScoreView: TextView
     private lateinit var computerPlayerScoreView: TextView
@@ -66,7 +70,7 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-
+        animationView = findViewById<LottieAnimationView>(R.id.my_animation_view)
         //Define variables
         closeImageView = findViewById<ImageView>(R.id.closeImageView)
 
@@ -90,8 +94,6 @@ class GameActivity : AppCompatActivity() {
 
         robot = findViewById<ImageView>(R.id.robotImageView)
         robotTextView = findViewById<TextView>(R.id.questionTextView)
-
-        tapImageView = findViewById<ImageView>(R.id.tapImageView)
 
         computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
         computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
@@ -130,6 +132,9 @@ class GameActivity : AppCompatActivity() {
 
     }
     private fun calculatePlayerPoints(answ: String, valuePlayer: Int?, valueDealer: Int?): Int {
+
+        Log.d("!!!","calculatePlayerPoints called with answ: $answ, valuePlayer: $valuePlayer, valueDealer: $valueDealer")
+
         // if for some reason any value is null, return 0
         if (valueDealer == null || valuePlayer == null) {
             return 0
@@ -152,9 +157,13 @@ class GameActivity : AppCompatActivity() {
         val humanPlayerPoints = calculatePlayerPoints(selectedAnswer, valuePlayer, valueDealer)
         val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
 
+        if (humanPlayerPoints > 0){
+            startStarPoint()
+        }
         // add points to each player
         player.score = player.score + humanPlayerPoints
         computerPlayer.score = computerPlayer.score + computerPlayerPoints
+        Log.d("!!!","humanPlayerPoints: $humanPlayerPoints, computerPlayerPoints: $computerPlayerPoints")
     }
 
     private fun showRemainingCards() {
@@ -184,6 +193,18 @@ class GameActivity : AppCompatActivity() {
 
         }, 3000)
 
+    }
+    private fun startStarPoint(){
+        animationView.bringToFront()
+        (animationView.parent as View).requestLayout()
+        (animationView.parent as View).invalidate()
+        animationView.isVisible = true
+        animationView.setSpeed(0.5f)
+        animationView.playAnimation()
+
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            animationView.visibility = View.GONE
+//        }, 2000)  // 3000 milliseconds = 3 seconds
     }
 
     private fun showPlayerNextCard() {
@@ -253,13 +274,13 @@ class GameActivity : AppCompatActivity() {
                 computerPlayerLockedAnswerLowerView
             ).filterNotNull()
             initializeTextViews(nonNullTextViews)
-
-            selectedLockedAnswerButton = null
-            selectedLockedAnswerButtonComputerPlayer = null
-            selectedAnswer = ""
-            selectedAnswerComputerPlayer = ""
-
         }
+
+        selectedLockedAnswerButton = null
+        selectedLockedAnswerButtonComputerPlayer = null
+        selectedAnswer = ""
+        selectedAnswerComputerPlayer = ""
+
         //"Throw away" used cards, display new cover cards
         throwAwayCards()
     }
@@ -293,7 +314,7 @@ class GameActivity : AppCompatActivity() {
             showNextCardByDealer()
         }, 500)
 
-        checkWin()
+
 
         if(computerDeck.isEmpty()){
 
