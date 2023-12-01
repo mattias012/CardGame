@@ -1,5 +1,6 @@
 package com.example.cardgame
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Color.parseColor
 import androidx.appcompat.app.AppCompatActivity
@@ -19,33 +20,40 @@ import org.w3c.dom.Text
 
 class GameActivity : AppCompatActivity() {
 
-    var selectedLockedAnswerButton: TextView? = null
-    var selectedAnswer: String = ""
+    val handler = Handler(Looper.getMainLooper())
 
-    var selectedLockedAnswerButtonComputerPlayer: TextView? = null
-    var selectedAnswerComputerPlayer: String = ""
+    private var selectedLockedAnswerButton: TextView? = null
+    private var selectedAnswer: String = ""
 
-    lateinit var displayedComputerCardView: ImageView
-    lateinit var displayedPlayerCardView: ImageView
-    lateinit var displayedComputerPlayerCardView: ImageView
-    lateinit var cardsLeftBoxView: TextView
-    lateinit var robot: ImageView
-    lateinit var robotTextView: TextView
-    lateinit var tapImageView: ImageView
-    lateinit var closeImageView: ImageView
+    private var selectedLockedAnswerButtonComputerPlayer: TextView? = null
+    private var selectedAnswerComputerPlayer: String = ""
 
-    var playerLockedAnswerJokerView: TextView? = null
-    var playerLockedAnswerLowerView: TextView? = null
-    var playerLockedAnswerHigherView: TextView? = null
-    var playerLockedAnswerMatchView: TextView? = null
+    private lateinit var displayedComputerCardView: ImageView
+    private lateinit var displayedPlayerCardView: ImageView
+    private lateinit var displayedComputerPlayerCardView: ImageView
+    private lateinit var cardsLeftBoxView: TextView
+    private lateinit var robot: ImageView
+    private lateinit var robotTextView: TextView
+    private lateinit var tapImageView: ImageView
+    private lateinit var closeImageView: ImageView
+    private lateinit var playerScoreView: TextView
+    private lateinit var computerPlayerScoreView: TextView
 
-    var computerPlayerLockedAnswerJokerView: TextView? = null
-    var computerPlayerLockedAnswerLowerView: TextView? = null
-    var computerPlayerLockedAnswerHigherView: TextView? = null
-    var computerLockedAnswerMatchView: TextView? = null
-//    val cardsLeftBoxView: TextView? = null
+    private var playerLockedAnswerJokerView: TextView? = null
+    private var playerLockedAnswerLowerView: TextView? = null
+    private var playerLockedAnswerHigherView: TextView? = null
+    private var playerLockedAnswerMatchView: TextView? = null
+
+    private var computerPlayerLockedAnswerJokerView: TextView? = null
+    private var computerPlayerLockedAnswerLowerView: TextView? = null
+    private var computerPlayerLockedAnswerHigherView: TextView? = null
+    private var computerLockedAnswerMatchView: TextView? = null
+
 
     private val theDeck = Deck()
+    private var currentDisplayedDealerCard : Card? = null
+    private var currentDisplayedPlayerCard : Card? = null
+    private var currentDisplayedComputerPlayerCard : Card? = null
 
     private val computerDeck = theDeck.getComputerDeck()
     private val computerPlayerDeck = theDeck.getComputerPlayerDeck()
@@ -60,7 +68,6 @@ class GameActivity : AppCompatActivity() {
 
 
         //Define variables
-
         closeImageView = findViewById<ImageView>(R.id.closeImageView)
 
         closeImageView.setOnClickListener{
@@ -94,16 +101,15 @@ class GameActivity : AppCompatActivity() {
 
         val playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
         displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
-        var playerScoreView = findViewById<TextView>(R.id.scorePlayerTextView)
+        playerScoreView = findViewById<TextView>(R.id.scorePlayerTextView)
 
         val computerCoverCardView = findViewById<ImageView>(R.id.computerCoverCard)
         displayedComputerPlayerCardView = findViewById<ImageView>(R.id.displayedComputerPlayerCard)
-        var computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
+        computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
 
         //Clear answer (set color tag)
         clearAnswer()
         hideRobot()
-
 
         //"Shuffle" and display first card by dealer
         showFirstCard()
@@ -123,13 +129,40 @@ class GameActivity : AppCompatActivity() {
         }
 
     }
+    private fun calculatePlayerPoints(answ: String, valuePlayer: Int?, valueDealer: Int?): Int {
+        // if for some reason any value is null, return 0
+        if (valueDealer == null || valuePlayer == null) {
+            return 0
+        }
 
+        // Calculate results
+        return when (answ) {
+            "higher" -> if (valuePlayer > valueDealer) 1 else 0
+            "lower" -> if (valuePlayer < valueDealer) 1 else 0
+            "match" -> if (valueDealer == valuePlayer) 3 else 0
+            "joker" -> if (valuePlayer == 15) 2 else 0
+            else -> 0
+        }
+    }
     private fun checkWin() {
-        selectedAnswer
+        val valueDealer = currentDisplayedDealerCard?.value
+        val valuePlayer = currentDisplayedPlayerCard?.value
+        val valueComputerPlayer = currentDisplayedComputerPlayerCard?.value
+
+        val humanPlayerPoints = calculatePlayerPoints(selectedAnswer, valuePlayer, valueDealer)
+        val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
+
+        // add points to each player
+        player.score = player.score + humanPlayerPoints
+        computerPlayer.score = computerPlayer.score + computerPlayerPoints
     }
 
     private fun showRemainingCards() {
         cardsLeftBoxView.text = "${computerDeck.size} cards left"
+    }
+    private fun showScore() {
+        playerScoreView.text = "Score: ${player.score}p"
+        computerPlayerScoreView.text = "Score: ${computerPlayer.score}p"
     }
 
     private fun showFirstCard() {
@@ -143,17 +176,12 @@ class GameActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             //display first card in the deck
             displayedComputerCardView.setImageResource(android.R.color.transparent)
-
-//            val displayThisCard = computerDeck.removeAt(0)
-//
-//            val imageName = displayThisCard.imageName
-//            val resID = resources.getIdentifier(imageName, "drawable", packageName)
-//            displayedComputerCardView.setBackgroundResource(resID)
             displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
             displayedComputerCardView.isVisible = true
 
             showRemainingCards()
             showRobot()
+
         }, 3000)
 
     }
@@ -162,6 +190,7 @@ class GameActivity : AppCompatActivity() {
         if (playerDeck.isNotEmpty()) {
 
             val nextCard = playerDeck.removeAt(0)
+            currentDisplayedPlayerCard = nextCard
 
             displayedPlayerCardView.setImageResource(android.R.color.transparent)
 
@@ -176,6 +205,7 @@ class GameActivity : AppCompatActivity() {
         if (computerPlayerDeck.isNotEmpty()) {
 
             val nextCard = computerPlayerDeck.removeAt(0)
+            currentDisplayedComputerPlayerCard = nextCard
 
             displayedComputerPlayerCardView.setImageResource(android.R.color.transparent)
 
@@ -192,6 +222,8 @@ class GameActivity : AppCompatActivity() {
 
             val nextCard = computerDeck.removeAt(0)
 
+            currentDisplayedDealerCard = nextCard
+
             displayedComputerCardView.setImageResource(android.R.color.transparent)
 
             val imageName = nextCard.imageName
@@ -200,18 +232,10 @@ class GameActivity : AppCompatActivity() {
             displayedComputerCardView.isVisible = true
 
             showRemainingCards()
+            checkWin()
+            showScore()
 
-//            if (computerDeck.size > 17) {
-//                tapImageView.isVisible = true
-//                Handler(Looper.getMainLooper()).postDelayed({
-//                    tapImageView.isVisible = false
-//                }, 2000)
-//            }
-
-        } else {
-            //send to winner page?
         }
-
     }
 
     private fun clearAnswer() {
@@ -236,7 +260,7 @@ class GameActivity : AppCompatActivity() {
             selectedAnswerComputerPlayer = ""
 
         }
-        //"Throw away" used cards, display cover cards
+        //"Throw away" used cards, display new cover cards
         throwAwayCards()
     }
 
@@ -257,27 +281,49 @@ class GameActivity : AppCompatActivity() {
 
         //Ok so now display both players cards
 
-        Handler(Looper.getMainLooper()).postDelayed({
+//        Handler(Looper.getMainLooper()).postDelayed({
             showComputerPlayerCard()
-        }, 2000)
-
-        Handler(Looper.getMainLooper()).postDelayed({
+//        }, 2000)
+//
+//        Handler(Looper.getMainLooper()).postDelayed({
             showPlayerNextCard()
-        }, 3000)
+//        }, 3000)
 
-        Handler(Looper.getMainLooper()).postDelayed({
+       handler.postDelayed({
             showNextCardByDealer()
-        }, 5000)
+        }, 500)
 
+        checkWin()
+
+        if(computerDeck.isEmpty()){
+
+            //Who is winner?
+            var winner : Player
+
+            if (player.score > computerPlayer.score){
+                winner = player
+            }
+            else {
+                winner = computerPlayer
+            }
+
+            //Checkout to next winner/highscore page
+            val intent = Intent(this, WinnerActivity::class.java)
+            intent.putExtra("playerName", winner.name)
+            intent.putExtra("score", winner.score)
+
+            //Flagga för att cleara minnet
+            startActivity(intent)
+        }
     }
 
     //Clear answer (set color tag)
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         if (event?.action == MotionEvent.ACTION_UP) {
+
             clearAnswer()
         }
-
         return true
     }
 

@@ -1,15 +1,13 @@
 package com.example.cardgame
 
-class Player(val name: String){
+class Player(var name: String){
 
     var score : Int = 0
-//    var deck : MutableList<Card>? = null
-//
-//    private fun setDeck(newDeck : MutableList<Card>){
-//        this.deck = newDeck
+
+//    fun setScore(addThisScore : Int){
+//        this.score = this.score + addThisScore
 //    }
-//
-//    private fun getDeck() : MutableList<Card>? {
-//        return this.deck
+//    fun getScore() : Int{
+//        return this.score
 //    }
 }
