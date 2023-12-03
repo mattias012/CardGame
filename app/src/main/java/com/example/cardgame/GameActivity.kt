@@ -1,24 +1,17 @@
 package com.example.cardgame
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Color.parseColor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.os.postDelayed
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
-import org.w3c.dom.Text
 
 class GameActivity : AppCompatActivity() {
 
@@ -121,14 +114,15 @@ class GameActivity : AppCompatActivity() {
         }
 
     }
-    private fun showAnimationFragment(){
+    private fun showAnimationFragment(containerId : Int){
+
         val animationFragment = AnimationFragment()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.container,animationFragment,"animationFragment")
+        transaction.add(containerId,animationFragment,"$containerId")
         transaction.commit()
     }
-    private fun removeAnimationFragment(){
-        val animationFragment = supportFragmentManager.findFragmentByTag("animationFragment")
+    private fun removeAnimationFragment(containerId : Int){
+        val animationFragment = supportFragmentManager.findFragmentByTag("$containerId")
 
         if (animationFragment != null){
             val transaction = supportFragmentManager.beginTransaction()
@@ -166,8 +160,18 @@ class GameActivity : AppCompatActivity() {
         val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
 
         if (humanPlayerPoints > 0){
-            showAnimationFragment()
+            showAnimationFragment(R.id.containerPlayer)
+            Handler(Looper.getMainLooper()).postDelayed({
+                removeAnimationFragment(R.id.containerPlayer)
+            }, 1200)
         }
+        if (computerPlayerPoints > 0){
+            showAnimationFragment(R.id.containerComputer)
+            Handler(Looper.getMainLooper()).postDelayed({
+                removeAnimationFragment(R.id.containerComputer)
+            }, 1200)
+        }
+
         // add points to each player
         player.score = player.score + humanPlayerPoints
         computerPlayer.score = computerPlayer.score + computerPlayerPoints

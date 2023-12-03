@@ -1,6 +1,9 @@
 package com.example.cardgame
 
+import android.animation.Animator
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +22,11 @@ class AnimationFragment() : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_pointscore, container, false)
+
         animationView = view.findViewById<LottieAnimationView>(R.id.my_animation_view)
+
+        animationView.progress = 1f
+        animationView.speed = -1f
         animationView.playAnimation()
 
         return view
