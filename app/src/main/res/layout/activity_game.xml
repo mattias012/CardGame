@@ -154,23 +154,24 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/computerCoverCard" />
+        app:layout_constraintTop_toBottomOf="@+id/computerCoverCard"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/displayedComputerCard"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/clubs5" />
+        app:srcCompat="@drawable/covercard" />
 
     <ImageView
         android:id="@+id/covercardBottom"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toStartOf="@+id/displayedComputerCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -181,7 +182,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/covercard" />
@@ -191,7 +192,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/covercard" />
@@ -201,7 +202,7 @@
         android:id="@+id/cardsLeftBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="52dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -262,34 +263,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="355dp" />
-
-    <ImageView
-        android:id="@+id/robotImageView"
-        android:layout_width="61dp"
-        android:layout_height="73dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/robot" />
-
-    <TextView
-        android:id="@+id/questionTextView"
-        android:layout_width="293dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="65dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/talk"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="What will your next card be?\nMatch the dealer for 3 points!\nLock in your answer"
-        android:textAlignment="center"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/robotImageView"
-        app:layout_constraintStart_toStartOf="@+id/robotImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintGuide_begin="298dp" />
 
     <ImageView
         android:id="@+id/closeImageView"
@@ -300,27 +274,42 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/close" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/my_animation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/playerLockedAnswerJoker"
-        app:layout_constraintTop_toBottomOf="@+id/covercardTop"
-        app:layout_constraintVertical_bias="0.602"
-        app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/gold"
-        app:lottie_loop="true"
-        tools:layout_editor_absoluteX="6dp"
-        />
 
     <FrameLayout
-        android:layout_width="418dp"
-        android:layout_height="430dp"
-        app:layout_constraintBottom_toTopOf="@+id/questionTextView"
-        app:layout_constraintStart_toStartOf="parent">
+        android:id="@+id/containerPlayer"
+        android:layout_width="139dp"
+        android:layout_height="119dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/displayedComputerPlayerCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playerLockedAnswerLower">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/containerComputer"
+        android:layout_width="139dp"
+        android:layout_height="119dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/computerCoverCard"
+        app:layout_constraintStart_toEndOf="@+id/displayedPlayerCard"
+        app:layout_constraintTop_toBottomOf="@+id/computerLockedAnswerHigher">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/container_robot"
+        android:layout_width="409dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/playerLockedAnswerMatch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayedComputerCard">
 
     </FrameLayout>
 
