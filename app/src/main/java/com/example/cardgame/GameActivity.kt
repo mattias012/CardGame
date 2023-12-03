@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.postDelayed
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -23,10 +24,6 @@ class GameActivity : AppCompatActivity() {
 
     val handler = Handler(Looper.getMainLooper())
 
-    private lateinit var animationView: LottieAnimationView
-
-
-
     private var selectedLockedAnswerButton: TextView? = null
     private var selectedAnswer: String = ""
 
@@ -37,8 +34,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var displayedPlayerCardView: ImageView
     private lateinit var displayedComputerPlayerCardView: ImageView
     private lateinit var cardsLeftBoxView: TextView
-    private lateinit var robot: ImageView
-    private lateinit var robotTextView: TextView
+
     private lateinit var closeImageView: ImageView
     private lateinit var playerScoreView: TextView
     private lateinit var computerPlayerScoreView: TextView
@@ -70,7 +66,6 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        animationView = findViewById<LottieAnimationView>(R.id.my_animation_view)
         //Define variables
         closeImageView = findViewById<ImageView>(R.id.closeImageView)
 
@@ -91,10 +86,6 @@ class GameActivity : AppCompatActivity() {
 
         cardsLeftBoxView = findViewById<TextView>(R.id.cardsLeftBox)
 
-
-        robot = findViewById<ImageView>(R.id.robotImageView)
-        robotTextView = findViewById<TextView>(R.id.questionTextView)
-
         computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
         computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
         computerPlayerLockedAnswerHigherView =
@@ -111,7 +102,6 @@ class GameActivity : AppCompatActivity() {
 
         //Clear answer (set color tag)
         clearAnswer()
-        hideRobot()
 
         //"Shuffle" and display first card by dealer
         showFirstCard()
@@ -130,6 +120,24 @@ class GameActivity : AppCompatActivity() {
             lockAnswer(it as TextView, "match")
         }
 
+    }
+    private fun showAnimationFragment(){
+        val animationFragment = AnimationFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.container,animationFragment,"animationFragment")
+        transaction.commit()
+    }
+    private fun removeAnimationFragment(){
+        val animationFragment = supportFragmentManager.findFragmentByTag("animationFragment")
+
+        if (animationFragment != null){
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.remove(animationFragment)
+            transaction.commit()
+        }
+        else {
+            Toast.makeText(this, "Animation not found", Toast.LENGTH_SHORT).show()
+        }
     }
     private fun calculatePlayerPoints(answ: String, valuePlayer: Int?, valueDealer: Int?): Int {
 
@@ -158,7 +166,7 @@ class GameActivity : AppCompatActivity() {
         val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
 
         if (humanPlayerPoints > 0){
-            startStarPoint()
+            showAnimationFragment()
         }
         // add points to each player
         player.score = player.score + humanPlayerPoints
@@ -189,22 +197,9 @@ class GameActivity : AppCompatActivity() {
             displayedComputerCardView.isVisible = true
 
             showRemainingCards()
-            showRobot()
 
         }, 3000)
 
-    }
-    private fun startStarPoint(){
-        animationView.bringToFront()
-        (animationView.parent as View).requestLayout()
-        (animationView.parent as View).invalidate()
-        animationView.isVisible = true
-        animationView.setSpeed(0.5f)
-        animationView.playAnimation()
-
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            animationView.visibility = View.GONE
-//        }, 2000)  // 3000 milliseconds = 3 seconds
     }
 
     private fun showPlayerNextCard() {
@@ -287,8 +282,6 @@ class GameActivity : AppCompatActivity() {
 
     private fun throwAwayCards() {
 
-        hideRobot()
-
         displayedComputerPlayerCardView.setImageResource(android.R.color.transparent)
         displayedPlayerCardView.setImageResource(android.R.color.transparent)
         displayedComputerCardView.setImageResource(android.R.color.transparent)
@@ -348,16 +341,7 @@ class GameActivity : AppCompatActivity() {
         return true
     }
 
-    private fun showRobot() {
-        robot.isVisible = true
-        robotTextView.isVisible = true
-    }
 
-    private fun hideRobot() {
-        robot.isVisible = false
-        robotTextView.isVisible = false
-
-    }
 
     private fun lockAnswer(selection: TextView, nameOfAnswer: String) {
         if (selectedLockedAnswerButton == null) {
