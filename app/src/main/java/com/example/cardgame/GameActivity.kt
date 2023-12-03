@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 
 class GameActivity : AppCompatActivity() {
@@ -97,7 +98,7 @@ class GameActivity : AppCompatActivity() {
         clearAnswer()
 
         //"Shuffle" and display first card by dealer
-        showFirstCard()
+        //showFirstCard()
 
         //Lock in answer
         playerLockedAnswerJokerView?.setOnClickListener {
@@ -114,13 +115,14 @@ class GameActivity : AppCompatActivity() {
         }
 
     }
-    private fun showAnimationFragment(containerId : Int){
+    private fun showAnimationFragment(containerId : Int, fragment: Fragment){
 
         val animationFragment = AnimationFragment()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(containerId,animationFragment,"$containerId")
+        transaction.add(containerId,fragment,"$containerId")
         transaction.commit()
     }
+
     private fun removeAnimationFragment(containerId : Int){
         val animationFragment = supportFragmentManager.findFragmentByTag("$containerId")
 
@@ -160,16 +162,17 @@ class GameActivity : AppCompatActivity() {
         val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
 
         if (humanPlayerPoints > 0){
-            showAnimationFragment(R.id.containerPlayer)
+            showAnimationFragment(R.id.containerPlayer, AnimationFragment())
+            showAnimationFragment(R.id.container_robot, AnimationRobot())
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerPlayer)
-            }, 1200)
+            }, 1150)
         }
         if (computerPlayerPoints > 0){
-            showAnimationFragment(R.id.containerComputer)
+            showAnimationFragment(R.id.containerComputer, AnimationFragment())
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerComputer)
-            }, 1200)
+            }, 1150)
         }
 
         // add points to each player
@@ -186,25 +189,25 @@ class GameActivity : AppCompatActivity() {
         computerPlayerScoreView.text = "Score: ${computerPlayer.score}p"
     }
 
-    private fun showFirstCard() {
-
-        //Load gif of shuffled card
-        val imageResource = R.drawable.shuffle
-        Glide.with(this)
-            .load(imageResource)
-            .into(displayedComputerCardView)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            //display first card in the deck
-            displayedComputerCardView.setImageResource(android.R.color.transparent)
-            displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
-            displayedComputerCardView.isVisible = true
-
-            showRemainingCards()
-
-        }, 3000)
-
-    }
+//    private fun showFirstCard() {
+//
+//        //Load gif of shuffled card
+//        val imageResource = R.drawable.shuffle
+//        Glide.with(this)
+//            .load(imageResource)
+//            .into(displayedComputerCardView)
+//
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            //display first card in the deck
+//            displayedComputerCardView.setImageResource(android.R.color.transparent)
+//            displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
+//            displayedComputerCardView.isVisible = true
+//
+//            showRemainingCards()
+//
+//        }, 3000)
+//
+//    }
 
     private fun showPlayerNextCard() {
         if (playerDeck.isNotEmpty()) {
