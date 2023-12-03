@@ -45,9 +45,9 @@ class GameActivity : AppCompatActivity() {
 
 
     private val theDeck = Deck()
-    private var currentDisplayedDealerCard : Card? = null
-    private var currentDisplayedPlayerCard : Card? = null
-    private var currentDisplayedComputerPlayerCard : Card? = null
+    private var currentDisplayedDealerCard: Card? = null
+    private var currentDisplayedPlayerCard: Card? = null
+    private var currentDisplayedComputerPlayerCard: Card? = null
 
     private val computerDeck = theDeck.getComputerDeck()
     private val computerPlayerDeck = theDeck.getComputerPlayerDeck()
@@ -60,45 +60,17 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        //Define variables
-        closeImageView = findViewById<ImageView>(R.id.closeImageView)
+        //Initialize Views
+        initImageViews()
+        initTextViews()
 
-        closeImageView.setOnClickListener{
+        //In case player wants to quit current game
+        closeImageView.setOnClickListener {
             finish()
         }
 
-        displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
-
-        val coverCardBottomView = findViewById<ImageView>(R.id.covercardBottom)
-        val coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
-        val coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
-
-        playerLockedAnswerJokerView = findViewById<TextView>(R.id.playerLockedAnswerJoker)
-        playerLockedAnswerLowerView = findViewById<TextView>(R.id.playerLockedAnswerLower)
-        playerLockedAnswerHigherView = findViewById<TextView>(R.id.playerLockedAnswerHigher)
-        playerLockedAnswerMatchView = findViewById<TextView>(R.id.playerLockedAnswerMatch)
-
-        cardsLeftBoxView = findViewById<TextView>(R.id.cardsLeftBox)
-
-        computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
-        computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
-        computerPlayerLockedAnswerHigherView =
-            findViewById<TextView>(R.id.computerLockedAnswerHigher)
-        computerLockedAnswerMatchView = findViewById<TextView>(R.id.computerPlayerLockedAnswerMatch)
-
-        val playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
-        displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
-        playerScoreView = findViewById<TextView>(R.id.scorePlayerTextView)
-
-        val computerCoverCardView = findViewById<ImageView>(R.id.computerCoverCard)
-        displayedComputerPlayerCardView = findViewById<ImageView>(R.id.displayedComputerPlayerCard)
-        computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
-
-        //Clear answer (set color tag)
+        //Clear answer (set color tag first time)
         clearAnswer()
-
-        //"Shuffle" and display first card by dealer
-        //showFirstCard()
 
         //Lock in answer
         playerLockedAnswerJokerView?.setOnClickListener {
@@ -113,31 +85,33 @@ class GameActivity : AppCompatActivity() {
         playerLockedAnswerMatchView?.setOnClickListener {
             lockAnswer(it as TextView, "match")
         }
-
     }
-    private fun showAnimationFragment(containerId : Int, fragment: Fragment){
 
-        val animationFragment = AnimationFragment()
+    private fun showAnimationFragment(containerId: Int, fragment: Fragment) {
+
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(containerId,fragment,"$containerId")
+        transaction.add(containerId, fragment, "$containerId")
         transaction.commit()
     }
 
-    private fun removeAnimationFragment(containerId : Int){
+    private fun removeAnimationFragment(containerId: Int) {
         val animationFragment = supportFragmentManager.findFragmentByTag("$containerId")
 
-        if (animationFragment != null){
+        if (animationFragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.remove(animationFragment)
             transaction.commit()
-        }
-        else {
+        } else {
             Toast.makeText(this, "Animation not found", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun calculatePlayerPoints(answ: String, valuePlayer: Int?, valueDealer: Int?): Int {
 
-        Log.d("!!!","calculatePlayerPoints called with answ: $answ, valuePlayer: $valuePlayer, valueDealer: $valueDealer")
+        Log.d(
+            "!!!",
+            "calculatePlayerPoints called with answ: $answ, valuePlayer: $valuePlayer, valueDealer: $valueDealer"
+        )
 
         // if for some reason any value is null, return 0
         if (valueDealer == null || valuePlayer == null) {
@@ -153,22 +127,24 @@ class GameActivity : AppCompatActivity() {
             else -> 0
         }
     }
+
     private fun checkWin() {
         val valueDealer = currentDisplayedDealerCard?.value
         val valuePlayer = currentDisplayedPlayerCard?.value
         val valueComputerPlayer = currentDisplayedComputerPlayerCard?.value
 
         val humanPlayerPoints = calculatePlayerPoints(selectedAnswer, valuePlayer, valueDealer)
-        val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
+        val computerPlayerPoints =
+            calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
 
-        if (humanPlayerPoints > 0){
+        if (humanPlayerPoints > 0) {
             showAnimationFragment(R.id.containerPlayer, AnimationFragment())
             showAnimationFragment(R.id.container_robot, AnimationRobot())
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerPlayer)
             }, 1150)
         }
-        if (computerPlayerPoints > 0){
+        if (computerPlayerPoints > 0) {
             showAnimationFragment(R.id.containerComputer, AnimationFragment())
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerComputer)
@@ -178,36 +154,20 @@ class GameActivity : AppCompatActivity() {
         // add points to each player
         player.score = player.score + humanPlayerPoints
         computerPlayer.score = computerPlayer.score + computerPlayerPoints
-        Log.d("!!!","humanPlayerPoints: $humanPlayerPoints, computerPlayerPoints: $computerPlayerPoints")
+        Log.d(
+            "!!!",
+            "humanPlayerPoints: $humanPlayerPoints, computerPlayerPoints: $computerPlayerPoints"
+        )
     }
 
     private fun showRemainingCards() {
         cardsLeftBoxView.text = "${computerDeck.size} cards left"
     }
+
     private fun showScore() {
         playerScoreView.text = "Score: ${player.score}p"
         computerPlayerScoreView.text = "Score: ${computerPlayer.score}p"
     }
-
-//    private fun showFirstCard() {
-//
-//        //Load gif of shuffled card
-//        val imageResource = R.drawable.shuffle
-//        Glide.with(this)
-//            .load(imageResource)
-//            .into(displayedComputerCardView)
-//
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            //display first card in the deck
-//            displayedComputerCardView.setImageResource(android.R.color.transparent)
-//            displayedComputerCardView.setBackgroundResource(R.drawable.covercard)
-//            displayedComputerCardView.isVisible = true
-//
-//            showRemainingCards()
-//
-//        }, 3000)
-//
-//    }
 
     private fun showPlayerNextCard() {
         if (playerDeck.isNotEmpty()) {
@@ -302,29 +262,23 @@ class GameActivity : AppCompatActivity() {
 
         //Ok so now display both players cards
 
-//        Handler(Looper.getMainLooper()).postDelayed({
-            showComputerPlayerCard()
-//        }, 2000)
-//
-//        Handler(Looper.getMainLooper()).postDelayed({
-            showPlayerNextCard()
-//        }, 3000)
+        showComputerPlayerCard()
+        showPlayerNextCard()
 
-       handler.postDelayed({
+        //Show dealar card 0,5 sek later
+        handler.postDelayed({
             showNextCardByDealer()
         }, 500)
 
 
-
-        if(computerDeck.isEmpty()){
+        if (computerDeck.isEmpty()) {
 
             //Who is winner?
-            var winner : Player
+            var winner: Player
 
-            if (player.score > computerPlayer.score){
+            if (player.score > computerPlayer.score) {
                 winner = player
-            }
-            else {
+            } else {
                 winner = computerPlayer
             }
 
@@ -347,7 +301,6 @@ class GameActivity : AppCompatActivity() {
         }
         return true
     }
-
 
 
     private fun lockAnswer(selection: TextView, nameOfAnswer: String) {
@@ -403,4 +356,32 @@ class GameActivity : AppCompatActivity() {
         return computerPlayerLockedAnswerJokerView
     }
 
+    private fun initImageViews() {
+        displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
+        val coverCardBottomView = findViewById<ImageView>(R.id.covercardBottom)
+        closeImageView = findViewById<ImageView>(R.id.closeImageView)
+        displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
+        val coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
+        val coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
+        val computerCoverCardView = findViewById<ImageView>(R.id.computerCoverCard)
+        displayedComputerPlayerCardView = findViewById<ImageView>(R.id.displayedComputerPlayerCard)
+        val playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
+        displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
+    }
+
+    private fun initTextViews() {
+        playerLockedAnswerJokerView = findViewById<TextView>(R.id.playerLockedAnswerJoker)
+        playerLockedAnswerLowerView = findViewById<TextView>(R.id.playerLockedAnswerLower)
+        playerLockedAnswerHigherView = findViewById<TextView>(R.id.playerLockedAnswerHigher)
+        playerLockedAnswerMatchView = findViewById<TextView>(R.id.playerLockedAnswerMatch)
+        computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
+        cardsLeftBoxView = findViewById<TextView>(R.id.cardsLeftBox)
+        computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
+        computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
+        computerPlayerLockedAnswerHigherView =
+            findViewById<TextView>(R.id.computerLockedAnswerHigher)
+        computerLockedAnswerMatchView = findViewById<TextView>(R.id.computerPlayerLockedAnswerMatch)
+        playerScoreView = findViewById<TextView>(R.id.scorePlayerTextView)
+
+    }
 }
