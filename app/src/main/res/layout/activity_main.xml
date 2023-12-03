@@ -7,6 +7,17 @@
     android:background="@drawable/bg"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/letsgobutton"
+        android:layout_width="209dp"
+        android:layout_height="228dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/go_2"
+        android:backgroundTint="@color/myColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/welcomeHeading"
         android:layout_width="wrap_content"
@@ -25,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:layout_marginBottom="17dp"
         android:ems="10"
         android:hint="Enter player name"
         android:inputType="text"
@@ -39,7 +51,6 @@
         android:layout_width="0dp"
         android:layout_height="258dp"
         android:layout_marginTop="50dp"
-        android:background="#FFFFFF"
         android:padding="5dp"
         android:text="This is the rules of the game.."
         app:layout_constraintBottom_toTopOf="@+id/enterNameView"
@@ -48,17 +59,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeHeading"
         app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/letsgobutton"
-        android:layout_width="127dp"
-        android:layout_height="135dp"
-        android:layout_marginTop="65dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterNameView"
-        app:srcCompat="@drawable/go_2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

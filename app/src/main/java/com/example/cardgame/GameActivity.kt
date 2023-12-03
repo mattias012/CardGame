@@ -53,7 +53,8 @@ class GameActivity : AppCompatActivity() {
     private val computerPlayerDeck = theDeck.getComputerPlayerDeck()
     private val playerDeck = theDeck.getPlayerDeck()
 
-    val player = Player("Mattias")
+    lateinit var player: Player
+
     val computerPlayer = Player("ComputerPlayer")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +65,9 @@ class GameActivity : AppCompatActivity() {
         initImageViews()
         initTextViews()
 
+        var playerName = intent.getStringExtra("playerName")
+        player = Player(playerName)
+
         //In case player wants to quit current game
         closeImageView.setOnClickListener {
             finish()
@@ -72,7 +76,7 @@ class GameActivity : AppCompatActivity() {
         //Clear answer (set color tag first time)
         clearAnswer()
 
-        //Lock in answer
+        //Lock in answer buttons
         playerLockedAnswerJokerView?.setOnClickListener {
             lockAnswer(it as TextView, "joker")
         }
@@ -223,28 +227,33 @@ class GameActivity : AppCompatActivity() {
 
     private fun clearAnswer() {
 
-        if (selectedLockedAnswerButton != null) {
+        if (computerDeck.isNotEmpty()) {
+            if (selectedLockedAnswerButton != null) {
 
-            val nonNullTextViews = listOf(
-                playerLockedAnswerJokerView,
-                playerLockedAnswerLowerView,
-                playerLockedAnswerHigherView,
-                playerLockedAnswerMatchView,
-                computerLockedAnswerMatchView,
-                computerPlayerLockedAnswerJokerView,
-                computerPlayerLockedAnswerHigherView,
-                computerPlayerLockedAnswerLowerView
-            ).filterNotNull()
-            initializeTextViews(nonNullTextViews)
+                val nonNullTextViews = listOf(
+                    playerLockedAnswerJokerView,
+                    playerLockedAnswerLowerView,
+                    playerLockedAnswerHigherView,
+                    playerLockedAnswerMatchView,
+                    computerLockedAnswerMatchView,
+                    computerPlayerLockedAnswerJokerView,
+                    computerPlayerLockedAnswerHigherView,
+                    computerPlayerLockedAnswerLowerView
+                ).filterNotNull()
+                initializeTextViews(nonNullTextViews)
+            }
+
+            selectedLockedAnswerButton = null
+            selectedLockedAnswerButtonComputerPlayer = null
+            selectedAnswer = ""
+            selectedAnswerComputerPlayer = ""
+
+            //"Throw away" used cards, display new cover cards
+            throwAwayCards()
         }
-
-        selectedLockedAnswerButton = null
-        selectedLockedAnswerButtonComputerPlayer = null
-        selectedAnswer = ""
-        selectedAnswerComputerPlayer = ""
-
-        //"Throw away" used cards, display new cover cards
-        throwAwayCards()
+        else {
+            endOfGame()
+        }
     }
 
     private fun throwAwayCards() {
@@ -270,7 +279,8 @@ class GameActivity : AppCompatActivity() {
             showNextCardByDealer()
         }, 500)
 
-
+    }
+    private fun endOfGame(){
         if (computerDeck.isEmpty()) {
 
             //Who is winner?
@@ -284,10 +294,11 @@ class GameActivity : AppCompatActivity() {
 
             //Checkout to next winner/highscore page
             val intent = Intent(this, WinnerActivity::class.java)
-            intent.putExtra("playerName", winner.name)
+            intent.putExtra("winnerName", winner.name ?: "Unknown Player")
+            intent.putExtra("playerName", player.name ?: "Unknown Player")
             intent.putExtra("score", winner.score)
 
-            //Flagga för att cleara minnet
+            Log.d("displayCoverCards", "Starting WinnerActivity")
             startActivity(intent)
         }
     }
