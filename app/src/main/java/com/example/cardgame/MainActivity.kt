@@ -1,22 +1,34 @@
 package com.example.cardgame
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 
 class MainActivity : AppCompatActivity() {
 
-    //lateinit var playerNameView: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         var playerNameView = findViewById<EditText>(R.id.enterNameView)
-        val buttonPlay = findViewById<ImageView>(R.id.letsgobutton)
+        val buttonPlay = findViewById<Button>(R.id.letsgobutton)
 
+        var playerName =  intent.getStringExtra("playerName") ?: "Unknown Player"
+
+        //Let playName remain the same if user plays more than one time
+        if (playerName.isNotEmpty() && !playerName.equals("Unknown Player")){
+            playerNameView.setText(playerName)
+        }
+
+        //Set color of play button
+        buttonPlay.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
+
+        //Lets play
         buttonPlay.setOnClickListener{
             handleButtonClick(playerNameView.text.toString())
         }
@@ -26,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, GameActivity::class.java)
         intent.putExtra("playerName", playerName)
-        //Flagga för att cleara minnet
+
         startActivity(intent)
     }
 }
