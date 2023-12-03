@@ -4,4 +4,6 @@ A simple card game -> view design idea here: https://www.figma.com/proto/H3PfJwA
 
 # Resources
 
-Including iamges from flaticon.com and animations from Lottiefiles
+Including images from flaticon.com and animations from Lottiefiles
+Splashscreen is created using AI.
+
