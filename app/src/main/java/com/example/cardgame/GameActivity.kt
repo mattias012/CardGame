@@ -158,7 +158,7 @@ class GameActivity : AppCompatActivity() {
         val computerPlayerPoints = calculatePlayerPoints(selectedAnswerComputerPlayer, valueComputerPlayer, valueDealer)
 
         if (humanPlayerPoints > 0){
-            startStarPoint()
+//            startStarPoint()
         }
         // add points to each player
         player.score = player.score + humanPlayerPoints
