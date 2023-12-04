@@ -10,9 +10,9 @@ import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 
 class GameActivity : AppCompatActivity() {
 
@@ -53,9 +53,21 @@ class GameActivity : AppCompatActivity() {
     private val computerPlayerDeck = theDeck.getComputerPlayerDeck()
     private val playerDeck = theDeck.getPlayerDeck()
 
+    private lateinit var coverCardBottomView: ImageView
+    private lateinit var coverCardMiddleView: ImageView
+    private lateinit var coverCardTopView: ImageView
+    private lateinit var computerCoverCardView: ImageView
+    private lateinit var playerCoverCardView: ImageView
+    private lateinit var computerCoverCardBottomView: ImageView
+    private lateinit var playerCoverCardBottomView: ImageView
+
+    private lateinit var dealerDeckCoverList: MutableList<ImageView>
+    private lateinit var computerPlayerDeckCoverList: MutableList<ImageView>
+    private lateinit var playerDeckCoverList: MutableList<ImageView>
+
     lateinit var player: Player
 
-    val computerPlayer = Player("ComputerPlayer")
+    private val computerPlayer = Player("CardioBot")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +79,7 @@ class GameActivity : AppCompatActivity() {
 
         var playerName = intent.getStringExtra("playerName")
         player = Player(playerName)
+        player.avatar = "avatarhumanone"
 
         //In case player wants to quit current game
         closeImageView.setOnClickListener {
@@ -173,55 +186,54 @@ class GameActivity : AppCompatActivity() {
         computerPlayerScoreView.text = "Score: ${computerPlayer.score}p"
     }
 
-    private fun showPlayerNextCard() {
-        if (playerDeck.isNotEmpty()) {
+    private fun showCard(deck: MutableList<Card>, displayedCardView: ImageView) {
 
-            val nextCard = playerDeck.removeAt(0)
-            currentDisplayedPlayerCard = nextCard
+        if (deck.isNotEmpty()) {
 
-            displayedPlayerCardView.setImageResource(android.R.color.transparent)
+            val nextCard = deck.removeAt(0)
+
+            when (displayedCardView) {
+                displayedPlayerCardView -> {
+                    currentDisplayedPlayerCard = nextCard
+                }
+
+                displayedComputerPlayerCardView -> {
+                    currentDisplayedComputerPlayerCard = nextCard
+                }
+
+                displayedComputerCardView -> {
+                    currentDisplayedDealerCard = nextCard
+                }
+            }
+
+            displayedCardView.setImageResource(android.R.color.transparent)
 
             val imageName = nextCard.imageName
             val resID = resources.getIdentifier(imageName, "drawable", packageName)
-            displayedPlayerCardView.setBackgroundResource(resID)
-            displayedPlayerCardView.isVisible = true
-        }
-    }
-
-    private fun showComputerPlayerCard() {
-        if (computerPlayerDeck.isNotEmpty()) {
-
-            val nextCard = computerPlayerDeck.removeAt(0)
-            currentDisplayedComputerPlayerCard = nextCard
-
-            displayedComputerPlayerCardView.setImageResource(android.R.color.transparent)
-
-            val imageName = nextCard.imageName
-            val resID = resources.getIdentifier(imageName, "drawable", packageName)
-            displayedComputerPlayerCardView.setBackgroundResource(resID)
-            displayedComputerPlayerCardView.isVisible = true
+            displayedCardView.setBackgroundResource(resID)
+            displayedCardView.isVisible = true
         }
     }
 
     private fun showNextCardByDealer() {
 
         if (computerDeck.isNotEmpty()) {
-
-            val nextCard = computerDeck.removeAt(0)
-
-            currentDisplayedDealerCard = nextCard
-
-            displayedComputerCardView.setImageResource(android.R.color.transparent)
-
-            val imageName = nextCard.imageName
-            val resID = resources.getIdentifier(imageName, "drawable", packageName)
-            displayedComputerCardView.setBackgroundResource(resID)
-            displayedComputerCardView.isVisible = true
-
+            showCard(computerDeck, displayedComputerCardView)
             showRemainingCards()
             checkWin()
             showScore()
+            removeCoverCardsInDeck(dealerDeckCoverList)
+        }
+    }
 
+    private fun removeCoverCardsInDeck(listOfCoverCardsDeck: MutableList<ImageView>) {
+        if (computerDeck.isNotEmpty()) {
+
+            if (computerDeck.size == 2) {
+                listOfCoverCardsDeck[0].isGone = true
+            } else if (computerDeck.size == 1) {
+                listOfCoverCardsDeck[1].isGone = true
+            }
         }
     }
 
@@ -270,9 +282,8 @@ class GameActivity : AppCompatActivity() {
     private fun displayCoverCards() {
 
         //Ok so now display both players cards
-
-        showComputerPlayerCard()
-        showPlayerNextCard()
+        showCard(computerPlayerDeck, displayedComputerPlayerCardView)
+        showCard(playerDeck, displayedPlayerCardView)
 
         //Show dealar card 0,5 sek later
         handler.postDelayed({
@@ -280,25 +291,18 @@ class GameActivity : AppCompatActivity() {
         }, 500)
 
     }
-    private fun endOfGame(){
+
+    private fun endOfGame() {
         if (computerDeck.isEmpty()) {
 
-            //Who is winner?
-            var winner: Player
-
-            if (player.score > computerPlayer.score) {
-                winner = player
-            } else {
-                winner = computerPlayer
-            }
-
-            //Checkout to next winner/highscore page
+            //Checkout to next winner/highscore page, send som data as well
             val intent = Intent(this, WinnerActivity::class.java)
-            intent.putExtra("winnerName", winner.name ?: "Unknown Player")
+            intent.putExtra("computerName", computerPlayer.name)
             intent.putExtra("playerName", player.name ?: "Unknown Player")
-            intent.putExtra("score", winner.score)
+            intent.putExtra("playerScore", player.score)
+            intent.putExtra("computerPlayerScore", computerPlayer.score)
+            intent.putExtra("avatarHumanOne", player.avatar)
 
-            Log.d("displayCoverCards", "Starting WinnerActivity")
             startActivity(intent)
         }
     }
@@ -369,15 +373,25 @@ class GameActivity : AppCompatActivity() {
 
     private fun initImageViews() {
         displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
-        val coverCardBottomView = findViewById<ImageView>(R.id.covercardBottom)
+
         closeImageView = findViewById<ImageView>(R.id.closeImageView)
         displayedComputerCardView = findViewById<ImageView>(R.id.displayedComputerCard)
-        val coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
-        val coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
-        val computerCoverCardView = findViewById<ImageView>(R.id.computerCoverCard)
-        displayedComputerPlayerCardView = findViewById<ImageView>(R.id.displayedComputerPlayerCard)
-        val playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
+        coverCardBottomView = findViewById<ImageView>(R.id.covercardBottom)
+        coverCardMiddleView = findViewById<ImageView>(R.id.covercardMiddle)
+        coverCardTopView = findViewById<ImageView>(R.id.covercardTop)
+        computerCoverCardView = findViewById<ImageView>(R.id.computerPlayerCoverCard)
+        playerCoverCardView = findViewById<ImageView>(R.id.playerCoverCard)
+        computerCoverCardBottomView =
+            findViewById<ImageView>(R.id.computerPlayerCoverCardBottom)
+        playerCoverCardBottomView = findViewById<ImageView>(R.id.playerCoverCardBottom)
+        displayedComputerPlayerCardView =
+            findViewById<ImageView>(R.id.displayedComputerPlayerCard)
         displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
+
+        dealerDeckCoverList = mutableListOf(coverCardBottomView, coverCardMiddleView)
+        computerPlayerDeckCoverList =
+            mutableListOf(computerCoverCardBottomView, computerCoverCardView)
+        playerDeckCoverList = mutableListOf(playerCoverCardBottomView, playerCoverCardView)
     }
 
     private fun initTextViews() {
@@ -387,11 +401,14 @@ class GameActivity : AppCompatActivity() {
         playerLockedAnswerMatchView = findViewById<TextView>(R.id.playerLockedAnswerMatch)
         computerPlayerScoreView = findViewById<TextView>(R.id.scoreComputerTextView)
         cardsLeftBoxView = findViewById<TextView>(R.id.cardsLeftBox)
-        computerPlayerLockedAnswerJokerView = findViewById<TextView>(R.id.computerLockedAnswerJoker)
-        computerPlayerLockedAnswerLowerView = findViewById<TextView>(R.id.computerLockedAnswerLower)
+        computerPlayerLockedAnswerJokerView =
+            findViewById<TextView>(R.id.computerLockedAnswerJoker)
+        computerPlayerLockedAnswerLowerView =
+            findViewById<TextView>(R.id.computerLockedAnswerLower)
         computerPlayerLockedAnswerHigherView =
             findViewById<TextView>(R.id.computerLockedAnswerHigher)
-        computerLockedAnswerMatchView = findViewById<TextView>(R.id.computerPlayerLockedAnswerMatch)
+        computerLockedAnswerMatchView =
+            findViewById<TextView>(R.id.computerPlayerLockedAnswerMatch)
         playerScoreView = findViewById<TextView>(R.id.scorePlayerTextView)
 
     }

@@ -149,12 +149,11 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:padding="5dp"
-        android:text="Score: 0"
         android:textSize="15dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/computerCoverCard"
+        app:layout_constraintTop_toBottomOf="@+id/computerPlayerCoverCard"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
@@ -208,9 +207,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/playerCoverCardBottom"
+        android:layout_width="159dp"
+        android:layout_height="201dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
         android:id="@+id/playerCoverCard"
         android:layout_width="159dp"
         android:layout_height="201dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -227,10 +236,20 @@
         app:srcCompat="@drawable/covercard" />
 
     <ImageView
-        android:id="@+id/computerCoverCard"
+        android:id="@+id/computerPlayerCoverCardBottom"
         android:layout_width="159dp"
         android:layout_height="201dp"
         android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/covercard" />
+
+    <ImageView
+        android:id="@+id/computerPlayerCoverCard"
+        android:layout_width="159dp"
+        android:layout_height="201dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/covercard" />
@@ -252,7 +271,6 @@
         android:layout_marginStart="4dp"
         android:layout_marginBottom="4dp"
         android:padding="5dp"
-        android:text="Score: 0"
         android:textSize="15dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -291,7 +309,7 @@
         android:layout_width="139dp"
         android:layout_height="119dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/computerCoverCard"
+        app:layout_constraintEnd_toEndOf="@+id/computerPlayerCoverCard"
         app:layout_constraintStart_toEndOf="@+id/displayedPlayerCard"
         app:layout_constraintTop_toBottomOf="@+id/computerLockedAnswerHigher">
 
