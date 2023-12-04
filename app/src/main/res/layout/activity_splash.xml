@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash"
-    tools:context=".SplashActivity" >
+    android:background="@drawable/splashrobo"
+    tools:context=".SplashActivity">
 
     <TextView
         android:id="@+id/textView"
