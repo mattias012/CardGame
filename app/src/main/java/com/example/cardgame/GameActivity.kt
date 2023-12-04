@@ -217,14 +217,12 @@ class GameActivity : AppCompatActivity() {
 
     private fun showNextCardByDealer() {
 
-        showCard(computerDeck, displayedComputerCardView)
-
         if (computerDeck.isNotEmpty()) {
+            showCard(computerDeck, displayedComputerCardView)
             showRemainingCards()
             checkWin()
             showScore()
             removeCoverCardsInDeck(dealerDeckCoverList)
-
         }
     }
 
@@ -264,7 +262,8 @@ class GameActivity : AppCompatActivity() {
 
             //"Throw away" used cards, display new cover cards
             throwAwayCards()
-        } else {
+        }
+        else {
             endOfGame()
         }
     }
@@ -296,9 +295,7 @@ class GameActivity : AppCompatActivity() {
     private fun endOfGame() {
         if (computerDeck.isEmpty()) {
 
-
-
-            //Checkout to next winner/highscore page
+            //Checkout to next winner/highscore page, send som data as well
             val intent = Intent(this, WinnerActivity::class.java)
             intent.putExtra("computerName", computerPlayer.name)
             intent.putExtra("playerName", player.name ?: "Unknown Player")

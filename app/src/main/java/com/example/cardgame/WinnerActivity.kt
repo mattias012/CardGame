@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
@@ -28,10 +30,14 @@ class WinnerActivity : AppCompatActivity() {
         val winnersJson = sharedPreferences.getString("highscoreList", "")
 
         // Konvertera JSON-strängen till en lista av GameResult-objekt
-        val type = object : TypeToken<List<GameResult>>() {}.type
-        val winnersList: MutableList<GameResult> = Gson().fromJson(winnersJson, type)
+        return if (winnersJson.isNullOrEmpty()) {
+            mutableListOf()
+        } else {
+            val type = object : TypeToken<List<GameResult>>() {}.type
+            val winnersList: MutableList<GameResult> = Gson().fromJson(winnersJson, type)
 
-        return winnersList
+            return winnersList
+        }
     }
 
     private fun saveHighScoreList(winnerList: MutableList<GameResult>){
@@ -50,7 +56,7 @@ class WinnerActivity : AppCompatActivity() {
     private fun clearHighscore(){
         val sharedPreferences = getSharedPreferences("myPreferences", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.clear()
+        editor.putString("highscoreList", "[]") // Sätt "highscoreList" till en tom JSON-sträng
         editor.apply()
         Toast.makeText(this, "Highscore cleared!", Toast.LENGTH_SHORT).show()
     }
@@ -67,9 +73,9 @@ class WinnerActivity : AppCompatActivity() {
         val avatarHumanPlayer = intent.getStringExtra("avatarHumanOne") ?: "avatarrobot"
         val avatarComputerPlayer = "avatarrobot"
 
-        val winnerImage = findViewById<ImageView>(R.id.winnerImage)
         val winnerText = findViewById<TextView>(R.id.winnerTextView)
         val playAgainButton = findViewById<Button>(R.id.playAgainButton)
+        val clearHighscoreButton = findViewById<Button>(R.id.clearHighscoreButton)
 
         var recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -110,6 +116,27 @@ class WinnerActivity : AppCompatActivity() {
             restartIntent.putExtra("playerName", playerName)
             restartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(restartIntent)
+        }
+
+        clearHighscoreButton.setOnClickListener {
+
+            var isDoubleTap = false
+            val handler = Handler(Looper.getMainLooper())
+            val runnable = Runnable {
+                isDoubleTap = false
+                Toast.makeText(this, "Double tap to clear high score", Toast.LENGTH_SHORT).show()
+            }
+
+            clearHighscoreButton.setOnClickListener {
+                if (!isDoubleTap) {
+                    isDoubleTap = true
+                    handler.postDelayed(runnable, 1000) // Kör Runnable efter 1000 ms
+                } else {
+                    handler.removeCallbacks(runnable)
+                    clearHighscore()
+                    isDoubleTap = false
+                }
+            }
         }
     }
 }
