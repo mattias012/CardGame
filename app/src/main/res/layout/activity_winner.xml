@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/winnerImage"
-        android:layout_width="261dp"
-        android:layout_height="308dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="167dp"
+        android:layout_height="127dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,10 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="4dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="25dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/winnerImage" />
@@ -41,4 +43,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="409dp"
+        android:layout_height="414dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/playAgainButton"
+        app:layout_constraintTop_toBottomOf="@+id/winnerTextView"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="1dp"
+        tools:listitem="@layout/highscore_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

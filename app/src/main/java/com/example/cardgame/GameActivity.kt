@@ -79,6 +79,7 @@ class GameActivity : AppCompatActivity() {
 
         var playerName = intent.getStringExtra("playerName")
         player = Player(playerName)
+        player.avatar = "avatarhumanone"
 
         //In case player wants to quit current game
         closeImageView.setOnClickListener {
@@ -295,23 +296,15 @@ class GameActivity : AppCompatActivity() {
     private fun endOfGame() {
         if (computerDeck.isEmpty()) {
 
-            //Who is winner?
-            var winner: Player
 
-            if (player.score > computerPlayer.score) {
-                winner = player
-            } else if (player.score < computerPlayer.score) {
-                winner = computerPlayer
-            } else {
-                //equal
-                winner = player
-            }
 
             //Checkout to next winner/highscore page
             val intent = Intent(this, WinnerActivity::class.java)
-            intent.putExtra("winnerName", winner.name ?: "Unknown Player")
+            intent.putExtra("computerName", computerPlayer.name)
             intent.putExtra("playerName", player.name ?: "Unknown Player")
-            intent.putExtra("score", winner.score)
+            intent.putExtra("playerScore", player.score)
+            intent.putExtra("computerPlayerScore", computerPlayer.score)
+            intent.putExtra("avatarHumanOne", player.avatar)
 
             startActivity(intent)
         }
