@@ -78,8 +78,10 @@ class GameActivity : AppCompatActivity() {
         initTextViews()
 
         var playerName = intent.getStringExtra("playerName")?.trimEnd()
+        var avatar = intent.getStringExtra("avatar") ?: "avatarhumanone"
         player = Player(playerName)
-        player.avatar = "avatarhumanone"
+
+        player.avatar = avatar
 
         //In case player wants to quit current game
         closeImageView.setOnClickListener {
@@ -156,8 +158,8 @@ class GameActivity : AppCompatActivity() {
         return when (answ) {
             "higher" -> if (valuePlayer > valueDealer) 1 else 0
             "lower" -> if (valuePlayer < valueDealer) 1 else 0
-            "match" -> if (valueDealer == valuePlayer) 3 else 0
-            "joker" -> if (valuePlayer == 15) 2 else 0
+            "match" -> if (valueDealer == valuePlayer) 4 else 0
+            "joker" -> if (valuePlayer == 15) 4 else 0
             else -> 0
         }
     }
