@@ -29,9 +29,9 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#D3D3D3")) // Ljusgrå
+            holder.itemView.setBackgroundColor(Color.parseColor("#D3D3D3")) // light grey
         } else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF")) // Vit
+            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF")) // white
         }
 
         when (position) {

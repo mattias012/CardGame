@@ -165,6 +165,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun checkWin() {
+
         val valueDealer = currentDisplayedDealerCard?.value
         val valuePlayer = currentDisplayedPlayerCard?.value
         val valueComputerPlayer = currentDisplayedComputerPlayerCard?.value
@@ -243,17 +244,25 @@ class GameActivity : AppCompatActivity() {
             showRemainingCards()
             checkWin()
             showScore()
-            removeCoverCardsInDeck(dealerDeckCoverList)
+            removeCoverCardsInDeck(dealerDeckCoverList, computerPlayerDeckCoverList, playerDeckCoverList)
         }
     }
 
-    private fun removeCoverCardsInDeck(listOfCoverCardsDeck: MutableList<ImageView>) {
+    private fun removeCoverCardsInDeck(listOfCoverCardsDeck: MutableList<ImageView>, listOfCoverCardsDeckComputer: MutableList<ImageView>, listOfCoverCardsDeckPlayer: MutableList<ImageView>) {
         if (computerDeck.isNotEmpty()) {
 
-            if (computerDeck.size == 2) {
+            if (computerDeck.size == 3) {
                 listOfCoverCardsDeck[0].isGone = true
-            } else if (computerDeck.size == 1) {
+
+            } else if (computerDeck.size == 2) {
                 listOfCoverCardsDeck[1].isGone = true
+
+                listOfCoverCardsDeckComputer[0].isVisible = false
+                listOfCoverCardsDeckPlayer[0].isVisible = false
+            }
+            else if (computerDeck.size == 1) {
+            listOfCoverCardsDeck[2].isGone = true
+
             }
         }
     }
@@ -409,7 +418,7 @@ class GameActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.displayedComputerPlayerCard)
         displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
 
-        dealerDeckCoverList = mutableListOf(coverCardBottomView, coverCardMiddleView)
+        dealerDeckCoverList = mutableListOf(coverCardBottomView, coverCardMiddleView, coverCardTopView)
         computerPlayerDeckCoverList =
             mutableListOf(computerCoverCardBottomView, computerCoverCardView)
         playerDeckCoverList = mutableListOf(playerCoverCardBottomView, playerCoverCardView)
