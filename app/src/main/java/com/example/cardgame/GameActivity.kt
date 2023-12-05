@@ -1,5 +1,6 @@
 package com.example.cardgame
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,7 +44,6 @@ class GameActivity : AppCompatActivity() {
     private var computerPlayerLockedAnswerHigherView: TextView? = null
     private var computerLockedAnswerMatchView: TextView? = null
 
-
     private val theDeck = Deck()
     private var currentDisplayedDealerCard: Card? = null
     private var currentDisplayedPlayerCard: Card? = null
@@ -77,7 +77,7 @@ class GameActivity : AppCompatActivity() {
         initImageViews()
         initTextViews()
 
-        var playerName = intent.getStringExtra("playerName")
+        var playerName = intent.getStringExtra("playerName")?.trimEnd()
         player = Player(playerName)
         player.avatar = "avatarhumanone"
 
@@ -88,6 +88,19 @@ class GameActivity : AppCompatActivity() {
 
         //Clear answer (set color tag first time)
         clearAnswer()
+
+        //Show start fragment
+        val bundle = Bundle()
+        bundle.putString("avatar", player.avatar)
+
+        val fragment = AnimationStart()
+        fragment.arguments = bundle
+
+        showAnimationFragment(R.id.container_robot, fragment)
+        Handler(Looper.getMainLooper()).postDelayed({
+            fragment.startFadeOutAnimation()
+            removeAnimationFragment(R.id.container_robot)
+        }, 5000)
 
         //Lock in answer buttons
         playerLockedAnswerJokerView?.setOnClickListener {
@@ -156,15 +169,17 @@ class GameActivity : AppCompatActivity() {
 
         if (humanPlayerPoints > 0) {
             showAnimationFragment(R.id.containerPlayer, AnimationFragment())
-            showAnimationFragment(R.id.container_robot, AnimationRobot())
+
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerPlayer)
             }, 1150)
         }
         if (computerPlayerPoints > 0) {
             showAnimationFragment(R.id.containerComputer, AnimationFragment())
+            showAnimationFragment(R.id.container_robot, AnimationRobot())
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerComputer)
+                removeAnimationFragment(R.id.container_robot)
             }, 1150)
         }
 

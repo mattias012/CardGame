@@ -10,21 +10,22 @@ import com.airbnb.lottie.LottieAnimationView
 
 class AnimationRobot() : Fragment() {
 
-        private lateinit var animationViewRobot: LottieAnimationView
+    private lateinit var animationViewRobot: LottieAnimationView
 
-        override fun onCreateView(
+    override fun onCreateView(
 
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-            val view = inflater.inflate(R.layout.fragment_robot, container, false)
+        val view = inflater.inflate(R.layout.fragment_robot, container, false)
 
-            animationViewRobot = view.findViewById<LottieAnimationView>(R.id.my_animation_view_robot)
+        animationViewRobot = view.findViewById<LottieAnimationView>(R.id.my_animation_view_robot)
+        animationViewRobot.playAnimation()
 
-            animationViewRobot.playAnimation()
+        return view
+    }
 
-            return view
-        }
+
 }
