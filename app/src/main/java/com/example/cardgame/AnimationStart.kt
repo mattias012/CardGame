@@ -43,6 +43,19 @@ class AnimationStart(): Fragment() {
         playerAvatarView.setBackgroundResource(resID)
         playerAvatarView.isVisible = true
 
+        startAnimation()
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Handler(Looper.getMainLooper()).postDelayed({
+            startFadeOutAnimation()
+        }, 4000)
+    }
+    private fun startAnimation(){
+
         animationViewarrowPlayer.playAnimation()
         animationViewarrowComputerPlayer.playAnimation()
         Handler(Looper.getMainLooper()).postDelayed({
@@ -51,21 +64,11 @@ class AnimationStart(): Fragment() {
             animationViewarrowPlayer.isVisible = false
             animationViewarrowComputerPlayer.isVisible = false
         }, 2000)
-
-
-
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        startFadeOutAnimation()
     }
     private fun startFadeOutAnimation() {
         view?.let {
             val fadeOut = ObjectAnimator.ofFloat(it, "alpha", 1f, 0f)
-            fadeOut.duration = 6000
+            fadeOut.duration = 4000
             fadeOut.start()
         }
     }

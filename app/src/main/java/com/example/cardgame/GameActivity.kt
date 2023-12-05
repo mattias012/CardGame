@@ -92,7 +92,6 @@ class GameActivity : AppCompatActivity() {
         //Show start fragment
         showStartFragment()
 
-
         //Lock in answer buttons
         playerLockedAnswerJokerView?.setOnClickListener {
             lockAnswer(it as TextView, "joker")
@@ -108,6 +107,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
     private fun showStartFragment(){
+        //Send player setting to fragmentview to change avatar and dispaly name
         val bundle = Bundle()
         bundle.putString("avatar", player.avatar)
         bundle.putString("playerName", player.name)
