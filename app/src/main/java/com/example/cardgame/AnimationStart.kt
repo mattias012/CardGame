@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
@@ -17,6 +18,7 @@ class AnimationStart(): Fragment() {
     private lateinit var animationViewarrowPlayer: LottieAnimationView
     private lateinit var animationViewarrowComputerPlayer: LottieAnimationView
     private lateinit var playerAvatarView: ImageView
+    private lateinit var playerTextView: TextView
 
     override fun onCreateView(
 
@@ -30,8 +32,12 @@ class AnimationStart(): Fragment() {
         animationViewarrowPlayer = view.findViewById<LottieAnimationView>(R.id.my_animation_view_arrow)
         animationViewarrowComputerPlayer = view.findViewById<LottieAnimationView>(R.id.my_animation_view_arrow_robot)
         playerAvatarView = view.findViewById<ImageView>(R.id.playerAvatar)
+        playerTextView = view.findViewById<TextView>(R.id.playerTextView)
 
         val avatarLink = arguments?.getString("avatar")
+        val playerName = arguments?.getString("playerName")
+
+        playerTextView.text = playerName
 
         val resID = resources.getIdentifier(avatarLink, "drawable", requireContext().packageName)
         playerAvatarView.setBackgroundResource(resID)
@@ -46,11 +52,21 @@ class AnimationStart(): Fragment() {
             animationViewarrowComputerPlayer.isVisible = false
         }, 2000)
 
+
+
         return view
     }
-    fun startFadeOutAnimation() {
-        val fadeOut = ObjectAnimator.ofFloat(view, "alpha",  1f, 0f)
-        fadeOut.duration = 2000
-        fadeOut.start()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        startFadeOutAnimation()
+    }
+    private fun startFadeOutAnimation() {
+        view?.let {
+            val fadeOut = ObjectAnimator.ofFloat(it, "alpha", 1f, 0f)
+            fadeOut.duration = 6000
+            fadeOut.start()
+        }
     }
 }

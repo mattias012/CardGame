@@ -90,17 +90,8 @@ class GameActivity : AppCompatActivity() {
         clearAnswer()
 
         //Show start fragment
-        val bundle = Bundle()
-        bundle.putString("avatar", player.avatar)
+        showStartFragment()
 
-        val fragment = AnimationStart()
-        fragment.arguments = bundle
-
-        showAnimationFragment(R.id.container_robot, fragment)
-        Handler(Looper.getMainLooper()).postDelayed({
-            fragment.startFadeOutAnimation()
-            removeAnimationFragment(R.id.container_robot)
-        }, 5000)
 
         //Lock in answer buttons
         playerLockedAnswerJokerView?.setOnClickListener {
@@ -116,7 +107,20 @@ class GameActivity : AppCompatActivity() {
             lockAnswer(it as TextView, "match")
         }
     }
+    private fun showStartFragment(){
+        val bundle = Bundle()
+        bundle.putString("avatar", player.avatar)
+        bundle.putString("playerName", player.name)
 
+        val fragment = AnimationStart()
+        fragment.arguments = bundle
+
+        showAnimationFragment(R.id.container_robot, fragment)
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            removeAnimationFragment(R.id.container_robot)
+        }, 7000)
+    }
     private fun showAnimationFragment(containerId: Int, fragment: Fragment) {
 
         val transaction = supportFragmentManager.beginTransaction()
