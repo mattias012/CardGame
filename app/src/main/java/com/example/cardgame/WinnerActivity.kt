@@ -19,7 +19,16 @@ import com.google.gson.reflect.TypeToken
 
 class WinnerActivity : AppCompatActivity() {
 
-//    var highscoreList = mutableListOf<GameResult>()
+    //Define lateinit variables
+    private lateinit var computerPlayerName: String
+    private lateinit var playerName: String
+    private lateinit var avatarHumanPlayer: String
+    private lateinit var avatarComputerPlayer: String
+
+    private lateinit var winnerText: TextView
+    private lateinit var playAgainButton: Button
+    private lateinit var clearHighscoreButton: Button
+    private lateinit var recyclerView: RecyclerView
 
     private fun getHighScoreList(): MutableList<GameResult> {
 
@@ -40,7 +49,7 @@ class WinnerActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveHighScoreList(winnerList: MutableList<GameResult>){
+    private fun saveHighScoreList(winnerList: MutableList<GameResult>) {
 
         // Få referensen till SharedPreferences
         val sharedPreferences = getSharedPreferences("myPreferences", Context.MODE_PRIVATE)
@@ -53,7 +62,7 @@ class WinnerActivity : AppCompatActivity() {
 
     }
 
-    private fun clearHighscore(){
+    private fun clearHighscore() {
         val sharedPreferences = getSharedPreferences("myPreferences", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("highscoreList", "[]") // Sätt "highscoreList" till en tom JSON-sträng
@@ -61,27 +70,7 @@ class WinnerActivity : AppCompatActivity() {
         Toast.makeText(this, "Highscore cleared!", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_winner)
-
-
-        val computerPlayerName = intent.getStringExtra("computerName") ?: "Computer"
-        val playerName = intent.getStringExtra("playerName") ?: "Unknown Player"
-        val playerScore = intent.getIntExtra("playerScore", 0)
-        val computerPlayerScore = intent.getIntExtra("computerPlayerScore", 0)
-        val avatarHumanPlayer = intent.getStringExtra("avatarHumanOne") ?: "avatarrobot"
-        val avatarComputerPlayer = "avatarrobot"
-
-        val winnerText = findViewById<TextView>(R.id.winnerTextView)
-        val playAgainButton = findViewById<Button>(R.id.playAgainButton)
-        val clearHighscoreButton = findViewById<Button>(R.id.clearHighscoreButton)
-
-        var recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-
-        //Who is the winner
+    private fun calculateWinner(playerScore: Int, computerPlayerScore: Int): GameResult {
         var gameResult: GameResult
         if (playerScore > computerPlayerScore) {
             winnerText.text = "Winner is $playerName with ${playerScore}p"
@@ -96,47 +85,92 @@ class WinnerActivity : AppCompatActivity() {
             gameResult = GameResult(playerName, playerScore, avatarHumanPlayer)
         }
 
+        return gameResult
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_winner)
+
+        //Set variables
+        initVar()
+        val playerScore = intent.getIntExtra("playerScore", 0)
+        val computerPlayerScore = intent.getIntExtra("computerPlayerScore", 0)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        //Who is the winner
+        //Calculate
+        val gameResult = calculateWinner(playerScore, computerPlayerScore)
+
+        //Get latest highscore
         val winnersList: MutableList<GameResult> = getHighScoreList()
 
+        //Save this result
         winnersList.add(gameResult)
 
+        //Save the entire highscore list again (ie update existing)
         saveHighScoreList(winnersList)
 
-        //val mutableWinnersList = winnersList.toMutableList()
+        //Sort the list by descending, highest score first
         winnersList.sortByDescending { it.score }
 
-
+        //Attach the list to the adapter
         val adapter = HighscoreRecycleAdapter(this, winnersList)
         recyclerView.adapter = adapter
 
+        //Play again?
         playAgainButton.setOnClickListener {
-
-            //If user chose to play again, send back to mainActivity, flag intent to clear memory
-            val restartIntent = Intent(this, MainActivity::class.java)
-            restartIntent.putExtra("playerName", playerName)
-            restartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(restartIntent)
+            handlePlayAgain()
         }
 
+        //Clear highscore list
         clearHighscoreButton.setOnClickListener {
+            handleClearButton(clearHighscoreButton)
+        }
+    }
 
-            var isDoubleTap = false
-            val handler = Handler(Looper.getMainLooper())
-            val runnable = Runnable {
+    private fun handlePlayAgain() {
+
+        //If user chose to play again, send back to mainActivity, flag intent to clear memory (remove activities in the stack
+        val restartIntent = Intent(this, MainActivity::class.java)
+        restartIntent.putExtra("playerName", playerName)
+        restartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(restartIntent)
+    }
+
+    private fun initVar() {
+        computerPlayerName = intent.getStringExtra("computerName") ?: "Computer"
+        playerName = intent.getStringExtra("playerName") ?: "Unknown Player"
+
+        avatarHumanPlayer = intent.getStringExtra("avatarHumanOne") ?: "avatarrobot"
+        avatarComputerPlayer = "avatarrobot"
+
+        winnerText = findViewById<TextView>(R.id.winnerTextView)
+        playAgainButton = findViewById<Button>(R.id.playAgainButton)
+        clearHighscoreButton = findViewById<Button>(R.id.clearHighscoreButton)
+
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+    }
+
+    private fun handleClearButton(button: Button) {
+        var isDoubleTap = false
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = Runnable {
+            isDoubleTap = false
+            Toast.makeText(this, "Double tap to clear high score", Toast.LENGTH_SHORT).show()
+        }
+
+        button.setOnClickListener {
+            if (!isDoubleTap) {
+                isDoubleTap = true
+                handler.postDelayed(runnable, 1000) // Kör Runnable efter 1000 ms
+            } else {
+                handler.removeCallbacks(runnable)
+                clearHighscore()
                 isDoubleTap = false
-                Toast.makeText(this, "Double tap to clear high score", Toast.LENGTH_SHORT).show()
-            }
-
-            clearHighscoreButton.setOnClickListener {
-                if (!isDoubleTap) {
-                    isDoubleTap = true
-                    handler.postDelayed(runnable, 1000) // Kör Runnable efter 1000 ms
-                } else {
-                    handler.removeCallbacks(runnable)
-                    clearHighscore()
-                    isDoubleTap = false
-                }
             }
         }
+
     }
 }
