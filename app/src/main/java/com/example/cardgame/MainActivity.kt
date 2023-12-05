@@ -15,6 +15,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val avatarOne = findViewById<ImageView>(R.id.avatarHumanOne)
+        val avatarTwo = findViewById<ImageView>(R.id.avatarHumanTwo)
+        val avatarThree = findViewById<ImageView>(R.id.avatarHumanThree)
+        val avatarFour = findViewById<ImageView>(R.id.avatarHumanFour)
+
+        avatarOne.setBackgroundResource(R.drawable.image_border)
+        avatarTwo.setBackgroundResource(R.drawable.image_border)
+        avatarThree.setBackgroundResource(R.drawable.image_border)
+        avatarFour.setBackgroundResource(R.drawable.image_border)
+
         var playerNameView = findViewById<EditText>(R.id.enterNameView)
         val buttonPlay = findViewById<Button>(R.id.letsgobutton)
 
@@ -26,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Set color of play button
-        buttonPlay.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
+        //buttonPlay.backgroundTintList = ColorStateList.valueOf(Color.BLACK)
 
         //Lets play
         buttonPlay.setOnClickListener{
