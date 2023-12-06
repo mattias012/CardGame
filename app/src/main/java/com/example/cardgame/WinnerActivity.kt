@@ -115,9 +115,21 @@ class WinnerActivity : AppCompatActivity() {
         //Sort the list by descending, highest score first
         winnersList.sortByDescending { it.score }
 
+        var position = -1
+        val recentGameTimestamp = gameResult.timestamp
+
+        for (i in 0 until winnersList.size) {
+            if (winnersList[i].timestamp == recentGameTimestamp) {
+                position = i
+                break
+            }
+        }
+
         //Attach the list to the adapter
-        val adapter = HighscoreRecycleAdapter(this, winnersList)
+        val adapter = HighscoreRecycleAdapter(this, winnersList, recentGameTimestamp)
         recyclerView.adapter = adapter
+
+        recyclerView.smoothScrollToPosition(position)
 
         //Play again?
         playAgainButton.setOnClickListener {

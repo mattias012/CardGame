@@ -2,6 +2,8 @@ package com.example.cardgame
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<GameResult>) : RecyclerView.Adapter<HighscoreRecycleAdapter.ViewHolder>() {
+class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<GameResult>, val recentGameTimestamp: Long) : RecyclerView.Adapter<HighscoreRecycleAdapter.ViewHolder>() {
 
     private var layoutInflater = LayoutInflater.from(context)
 
@@ -28,10 +30,30 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#D3D3D3")) // light grey
-        } else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF")) // white
+        val game = highscoreList[position]
+        holder.itemView.apply {
+            if (position % 2 == 0) {
+                if (game.timestamp == recentGameTimestamp) {
+                    setBackgroundColor(Color.YELLOW) // or any color you want
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        setBackgroundColor(Color.parseColor("#D3D3D3")) // light grey
+                    }, 2000)
+                }
+                else {
+                    setBackgroundColor(Color.parseColor("#D3D3D3")) // light grey
+                }
+            }
+            else {
+                if (game.timestamp == recentGameTimestamp) {
+                    setBackgroundColor(Color.YELLOW) // or any color you want
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        setBackgroundColor(Color.WHITE) // or your default color
+                    }, 2000)
+                }
+                else {
+                    setBackgroundColor(Color.WHITE) // or your default color
+                }
+            }
         }
 
         when (position) {
