@@ -34,7 +34,7 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
         holder.itemView.apply {
             if (position % 2 == 0) {
                 if (game.timestamp == recentGameTimestamp) {
-                    setBackgroundColor(Color.YELLOW) // or any color you want
+                    setBackgroundColor(Color.parseColor("#FF007F")) // or any color you want
                     Handler(Looper.getMainLooper()).postDelayed({
                         setBackgroundColor(Color.parseColor("#D3D3D3")) // light grey
                     }, 2000)

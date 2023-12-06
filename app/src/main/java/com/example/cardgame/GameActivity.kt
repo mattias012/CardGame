@@ -68,6 +68,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var player: Player
 
     private val computerPlayer = Player("CardioBot")
+    private var isFragmentActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,14 +121,22 @@ class GameActivity : AppCompatActivity() {
         showAnimationFragment(R.id.container_robot, fragment)
         Handler(Looper.getMainLooper()).postDelayed({
 
-            removeAnimationFragment(R.id.container_robot)
-        }, 7000)
+            if(isFragmentActive) {
+                removeAnimationFragment(R.id.container_robot)
+            }
+        }, 6000)
     }
     private fun showAnimationFragment(containerId: Int, fragment: Fragment) {
 
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(containerId, fragment, "$containerId")
         transaction.commit()
+
+        Log.d("!!!", "$isFragmentActive")
+        if (containerId == (R.id.container_robot)){
+            isFragmentActive = true
+            Log.d("!!!", "är nu $isFragmentActive")
+        }
     }
 
     private fun removeAnimationFragment(containerId: Int) {
@@ -137,17 +146,16 @@ class GameActivity : AppCompatActivity() {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.remove(animationFragment)
             transaction.commit()
+
+            if (containerId == R.id.container_robot){
+                isFragmentActive = false
+            }
         } else {
             Toast.makeText(this, "Animation not found", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun calculatePlayerPoints(answ: String, valuePlayer: Int?, valueDealer: Int?): Int {
-
-        Log.d(
-            "!!!",
-            "calculatePlayerPoints called with answ: $answ, valuePlayer: $valuePlayer, valueDealer: $valueDealer"
-        )
 
         // if for some reason any value is null, return 0
         if (valueDealer == null || valuePlayer == null) {
@@ -183,20 +191,24 @@ class GameActivity : AppCompatActivity() {
         }
         if (computerPlayerPoints > 0) {
             showAnimationFragment(R.id.containerComputer, AnimationFragment())
-            showAnimationFragment(R.id.container_robot, AnimationRobot())
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerComputer)
-                removeAnimationFragment(R.id.container_robot)
             }, 1150)
+
+            //Let CardioBOT talk
+            showAnimationFragment(R.id.container_robot, AnimationRobot())
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (isFragmentActive){
+                    removeAnimationFragment(R.id.container_robot)
+                }
+            }, 4150)
         }
 
         // add points to each player
         player.score = player.score + humanPlayerPoints
         computerPlayer.score = computerPlayer.score + computerPlayerPoints
-        Log.d(
-            "!!!",
-            "humanPlayerPoints: $humanPlayerPoints, computerPlayerPoints: $computerPlayerPoints"
-        )
+
     }
 
     private fun showRemainingCards() {
@@ -346,6 +358,10 @@ class GameActivity : AppCompatActivity() {
         if (event?.action == MotionEvent.ACTION_UP) {
 
             clearAnswer()
+
+            if (isFragmentActive) {
+                removeAnimationFragment(R.id.container_robot)
+            }
         }
         return true
     }

@@ -95,4 +95,9 @@ class AnimationStart() : Fragment() {
             fadeOut.start()
         }
     }
+    override fun onStop() {
+        super.onStop()
+        animationViewarrowPlayer.cancelAnimation()
+        animationViewarrowComputerPlayer.cancelAnimation()
+    }
 }

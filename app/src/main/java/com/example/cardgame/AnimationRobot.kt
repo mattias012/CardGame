@@ -26,6 +26,9 @@ class AnimationRobot() : Fragment() {
 
         return view
     }
-
+    override fun onStop() {
+        super.onStop()
+        animationViewRobot.cancelAnimation()
+    }
 
 }

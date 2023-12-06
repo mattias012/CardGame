@@ -32,32 +32,33 @@ class WinnerActivity : AppCompatActivity() {
 
     private fun getHighScoreList(): MutableList<GameResult> {
 
-        // Hämta referensen till SharedPreferences
+        //Get the reference to SharedPreferences
         val sharedPreferences = getSharedPreferences("myPreferences", Context.MODE_PRIVATE)
 
-        // Hämta JSON-strängen från SharedPreferences
+        //Get JSON string from SharedPreferences
         val winnersJson = sharedPreferences.getString("highscoreList", "")
 
-        // Konvertera JSON-strängen till en lista av GameResult-objekt
+        //Convert JSON string to a list of GameResult objects
         return if (winnersJson.isNullOrEmpty()) {
             mutableListOf()
         } else {
             val type = object : TypeToken<List<GameResult>>() {}.type
             val winnersList: MutableList<GameResult> = Gson().fromJson(winnersJson, type)
 
+            //Return the list
             return winnersList
         }
     }
 
     private fun saveHighScoreList(winnerList: MutableList<GameResult>) {
 
-        // Få referensen till SharedPreferences
+        //Get the current list from SharedPreferences
         val sharedPreferences = getSharedPreferences("myPreferences", Context.MODE_PRIVATE)
 
-        // Konvertera listan till en JSON-sträng
+        //Convert list to JSON string
         val winnersJson = Gson().toJson(winnerList)
 
-        // Spara JSON-strängen i SharedPreferences
+        //Save new list to SharedPreferences
         sharedPreferences.edit().putString("highscoreList", winnersJson).apply()
 
     }
@@ -125,7 +126,7 @@ class WinnerActivity : AppCompatActivity() {
             }
         }
 
-        //Attach the list to the adapter
+        //Attach the list and recent timestamp to the adapter
         val adapter = HighscoreRecycleAdapter(this, winnersList, recentGameTimestamp)
         recyclerView.adapter = adapter
 
