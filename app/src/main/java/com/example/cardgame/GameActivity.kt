@@ -244,7 +244,7 @@ class GameActivity : AppCompatActivity() {
             showRemainingCards()
             checkWin()
             showScore()
-            removeCoverCardsInDeck(dealerDeckCoverList, computerPlayerDeckCoverList, playerDeckCoverList)
+
         }
     }
 
@@ -261,8 +261,10 @@ class GameActivity : AppCompatActivity() {
                 listOfCoverCardsDeckPlayer[0].isVisible = false
             }
             else if (computerDeck.size == 1) {
-            listOfCoverCardsDeck[2].isGone = true
 
+                listOfCoverCardsDeckComputer[1].isVisible = false
+                listOfCoverCardsDeckPlayer[1].isVisible = false
+                listOfCoverCardsDeck[2].isVisible = false
             }
         }
     }
@@ -292,6 +294,7 @@ class GameActivity : AppCompatActivity() {
 
             //"Throw away" used cards, display new cover cards
             throwAwayCards()
+            removeCoverCardsInDeck(dealerDeckCoverList, computerPlayerDeckCoverList, playerDeckCoverList)
         }
         else {
             endOfGame()
