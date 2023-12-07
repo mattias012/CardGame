@@ -83,6 +83,7 @@ class WinnerActivity : AppCompatActivity() {
         } else {
             //equal
             winnerText.text = "Tied!"
+            //At this time in case of tied result, the humanplayer's score is added to result
             gameResult = GameResult(playerName, playerScore, avatarHumanPlayer)
         }
 
@@ -116,6 +117,7 @@ class WinnerActivity : AppCompatActivity() {
         //Sort the list by descending, highest score first
         winnersList.sortByDescending { it.score }
 
+        //Get THIS game result, based on timestamp, so we can scroll to that position
         var position = -1
         val recentGameTimestamp = gameResult.timestamp
 
@@ -130,6 +132,7 @@ class WinnerActivity : AppCompatActivity() {
         val adapter = HighscoreRecycleAdapter(this, winnersList, recentGameTimestamp)
         recyclerView.adapter = adapter
 
+        //Scroll to THIS result
         recyclerView.smoothScrollToPosition(position)
 
         //Play again?
@@ -171,13 +174,13 @@ class WinnerActivity : AppCompatActivity() {
         val handler = Handler(Looper.getMainLooper())
         val runnable = Runnable {
             isDoubleTap = false
-            Toast.makeText(this, "Double tap to clear high score", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Double tap to clear highscore", Toast.LENGTH_SHORT).show()
         }
 
         button.setOnClickListener {
             if (!isDoubleTap) {
                 isDoubleTap = true
-                handler.postDelayed(runnable, 1000) // Kör Runnable efter 1000 ms
+                handler.postDelayed(runnable, 1000) //
             } else {
                 handler.removeCallbacks(runnable)
                 clearHighscore()

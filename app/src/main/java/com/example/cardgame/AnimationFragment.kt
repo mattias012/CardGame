@@ -9,6 +9,7 @@ import com.airbnb.lottie.LottieAnimationView
 
 class AnimationFragment() : Fragment() {
 
+    //This fragment shows a star when a player gets point(s), used on both side in diffrent containers.
     private lateinit var animationView: LottieAnimationView
 
     override fun onCreateView(
