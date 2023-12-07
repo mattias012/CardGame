@@ -1,5 +1,6 @@
 package com.example.cardgame
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,7 +44,6 @@ class GameActivity : AppCompatActivity() {
     private var computerPlayerLockedAnswerHigherView: TextView? = null
     private var computerLockedAnswerMatchView: TextView? = null
 
-
     private val theDeck = Deck()
     private var currentDisplayedDealerCard: Card? = null
     private var currentDisplayedPlayerCard: Card? = null
@@ -68,6 +68,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var player: Player
 
     private val computerPlayer = Player("CardioBot")
+    private var isFragmentActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,9 +78,11 @@ class GameActivity : AppCompatActivity() {
         initImageViews()
         initTextViews()
 
-        var playerName = intent.getStringExtra("playerName")
+        var playerName = intent.getStringExtra("playerName")?.trimEnd()
+        var avatar = intent.getStringExtra("avatar") ?: "avatarhumanone"
         player = Player(playerName)
-        player.avatar = "avatarhumanone"
+
+        player.avatar = avatar
 
         //In case player wants to quit current game
         closeImageView.setOnClickListener {
@@ -88,6 +91,9 @@ class GameActivity : AppCompatActivity() {
 
         //Clear answer (set color tag first time)
         clearAnswer()
+
+        //Show start fragment
+        showStartFragment()
 
         //Lock in answer buttons
         playerLockedAnswerJokerView?.setOnClickListener {
@@ -103,12 +109,34 @@ class GameActivity : AppCompatActivity() {
             lockAnswer(it as TextView, "match")
         }
     }
+    private fun showStartFragment(){
+        //Send player setting to fragmentview to change avatar and dispaly name
+        val bundle = Bundle()
+        bundle.putString("avatar", player.avatar)
+        bundle.putString("playerName", player.name)
 
+        val fragment = AnimationStart()
+        fragment.arguments = bundle
+
+        showAnimationFragment(R.id.container_robot, fragment)
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            if(isFragmentActive) {
+                removeAnimationFragment(R.id.container_robot)
+            }
+        }, 6000)
+    }
     private fun showAnimationFragment(containerId: Int, fragment: Fragment) {
 
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(containerId, fragment, "$containerId")
         transaction.commit()
+
+        Log.d("!!!", "$isFragmentActive")
+        if (containerId == (R.id.container_robot)){
+            isFragmentActive = true
+            Log.d("!!!", "är nu $isFragmentActive")
+        }
     }
 
     private fun removeAnimationFragment(containerId: Int) {
@@ -118,17 +146,16 @@ class GameActivity : AppCompatActivity() {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.remove(animationFragment)
             transaction.commit()
+
+            if (containerId == R.id.container_robot){
+                isFragmentActive = false
+            }
         } else {
             Toast.makeText(this, "Animation not found", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun calculatePlayerPoints(answ: String, valuePlayer: Int?, valueDealer: Int?): Int {
-
-        Log.d(
-            "!!!",
-            "calculatePlayerPoints called with answ: $answ, valuePlayer: $valuePlayer, valueDealer: $valueDealer"
-        )
 
         // if for some reason any value is null, return 0
         if (valueDealer == null || valuePlayer == null) {
@@ -139,13 +166,14 @@ class GameActivity : AppCompatActivity() {
         return when (answ) {
             "higher" -> if (valuePlayer > valueDealer) 1 else 0
             "lower" -> if (valuePlayer < valueDealer) 1 else 0
-            "match" -> if (valueDealer == valuePlayer) 3 else 0
-            "joker" -> if (valuePlayer == 15) 2 else 0
+            "match" -> if (valueDealer == valuePlayer) 4 else 0
+            "joker" -> if (valuePlayer == 15) 4 else 0
             else -> 0
         }
     }
 
     private fun checkWin() {
+
         val valueDealer = currentDisplayedDealerCard?.value
         val valuePlayer = currentDisplayedPlayerCard?.value
         val valueComputerPlayer = currentDisplayedComputerPlayerCard?.value
@@ -156,7 +184,7 @@ class GameActivity : AppCompatActivity() {
 
         if (humanPlayerPoints > 0) {
             showAnimationFragment(R.id.containerPlayer, AnimationFragment())
-            showAnimationFragment(R.id.container_robot, AnimationRobot())
+
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerPlayer)
             }, 1150)
@@ -166,15 +194,21 @@ class GameActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).postDelayed({
                 removeAnimationFragment(R.id.containerComputer)
             }, 1150)
+
+            //Let CardioBOT talk
+            showAnimationFragment(R.id.container_robot, AnimationRobot())
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (isFragmentActive){
+                    removeAnimationFragment(R.id.container_robot)
+                }
+            }, 5150)
         }
 
         // add points to each player
         player.score = player.score + humanPlayerPoints
         computerPlayer.score = computerPlayer.score + computerPlayerPoints
-        Log.d(
-            "!!!",
-            "humanPlayerPoints: $humanPlayerPoints, computerPlayerPoints: $computerPlayerPoints"
-        )
+
     }
 
     private fun showRemainingCards() {
@@ -222,17 +256,27 @@ class GameActivity : AppCompatActivity() {
             showRemainingCards()
             checkWin()
             showScore()
-            removeCoverCardsInDeck(dealerDeckCoverList)
+
         }
     }
 
-    private fun removeCoverCardsInDeck(listOfCoverCardsDeck: MutableList<ImageView>) {
+    private fun removeCoverCardsInDeck(listOfCoverCardsDeck: MutableList<ImageView>, listOfCoverCardsDeckComputer: MutableList<ImageView>, listOfCoverCardsDeckPlayer: MutableList<ImageView>) {
         if (computerDeck.isNotEmpty()) {
 
-            if (computerDeck.size == 2) {
+            if (computerDeck.size == 3) {
                 listOfCoverCardsDeck[0].isGone = true
-            } else if (computerDeck.size == 1) {
+
+            } else if (computerDeck.size == 2) {
                 listOfCoverCardsDeck[1].isGone = true
+
+                listOfCoverCardsDeckComputer[0].isVisible = false
+                listOfCoverCardsDeckPlayer[0].isVisible = false
+            }
+            else if (computerDeck.size == 1) {
+
+                listOfCoverCardsDeckComputer[1].isVisible = false
+                listOfCoverCardsDeckPlayer[1].isVisible = false
+                listOfCoverCardsDeck[2].isVisible = false
             }
         }
     }
@@ -262,6 +306,7 @@ class GameActivity : AppCompatActivity() {
 
             //"Throw away" used cards, display new cover cards
             throwAwayCards()
+            removeCoverCardsInDeck(dealerDeckCoverList, computerPlayerDeckCoverList, playerDeckCoverList)
         }
         else {
             endOfGame()
@@ -313,6 +358,10 @@ class GameActivity : AppCompatActivity() {
         if (event?.action == MotionEvent.ACTION_UP) {
 
             clearAnswer()
+
+            if (isFragmentActive) {
+                removeAnimationFragment(R.id.container_robot)
+            }
         }
         return true
     }
@@ -388,7 +437,7 @@ class GameActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.displayedComputerPlayerCard)
         displayedPlayerCardView = findViewById<ImageView>(R.id.displayedPlayerCard)
 
-        dealerDeckCoverList = mutableListOf(coverCardBottomView, coverCardMiddleView)
+        dealerDeckCoverList = mutableListOf(coverCardBottomView, coverCardMiddleView, coverCardTopView)
         computerPlayerDeckCoverList =
             mutableListOf(computerCoverCardBottomView, computerCoverCardView)
         playerDeckCoverList = mutableListOf(playerCoverCardBottomView, playerCoverCardView)

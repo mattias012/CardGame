@@ -9,9 +9,9 @@
 
     <Button
         android:id="@+id/letsgobutton"
-        android:layout_width="209dp"
-        android:layout_height="228dp"
-        android:layout_marginBottom="3dp"
+        android:layout_width="121dp"
+        android:layout_height="135dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/go_2"
         android:backgroundTint="@color/myColor"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,14 +20,19 @@
 
     <TextView
         android:id="@+id/welcomeHeading"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
+        android:background="#DFDFDF"
         android:text="The Card Game"
-        android:textSize="24dp"
+        android:textAlignment="center"
+        android:textColor="#674444"
+        android:textColorHighlight="#BFBFBF"
+        android:textColorHint="#8E8E8E"
+        android:textSize="50dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +40,6 @@
         android:id="@+id/enterNameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_marginBottom="17dp"
         android:ems="10"
         android:hint="Enter player name"
@@ -43,21 +47,99 @@
         app:layout_constraintBottom_toTopOf="@+id/letsgobutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rulesView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/rulesView"
-        android:layout_width="0dp"
-        android:layout_height="258dp"
-        android:layout_marginTop="50dp"
+    <ImageView
+        android:id="@+id/ruleImageView"
+        android:layout_width="54dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/book" />
+
+    <ImageView
+        android:id="@+id/avatarHumanOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="42dp"
         android:padding="5dp"
-        android:text="This is the rules of the game.."
+        app:layout_constraintBottom_toTopOf="@+id/avatarHumanThree"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/avatarhumanone" />
+
+    <ImageView
+        android:id="@+id/avatarHumanTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="42dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/avatarHumanFour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:srcCompat="@drawable/avatarhumantwo" />
+
+    <ImageView
+        android:id="@+id/avatarHumanThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/enterNameView"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/avatarhumanthree" />
+
+    <ImageView
+        android:id="@+id/avatarHumanFour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:padding="5dp"
         app:layout_constraintBottom_toTopOf="@+id/enterNameView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:srcCompat="@drawable/avatarhumanfour" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="201dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="318dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="11dp"
+        android:text="Select your avatar"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/avatarHumanOne"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeHeading"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/welcomeHeading" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="48dp"
+        android:layout_height="53dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/trophy" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
