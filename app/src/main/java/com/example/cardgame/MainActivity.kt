@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val avatarOne = findViewById<ImageView>(R.id.avatarHumanOne)
         val avatarTwo = findViewById<ImageView>(R.id.avatarHumanTwo)
         val avatarThree = findViewById<ImageView>(R.id.avatarHumanThree)
@@ -70,10 +69,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onImageSelected(newImage: ImageView) {
-        // Återställ den tidigare valda bilden
+        //Reset the previous avatar
         currentSelectedImage?.setBackgroundResource(R.drawable.image_border)
 
-        // Uppdatera den valda bilden
+        //Update new image with border
         newImage.setBackgroundResource(R.drawable.image_border_selected)
         currentSelectedImage = newImage
     }

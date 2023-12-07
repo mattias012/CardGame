@@ -18,6 +18,9 @@ import com.airbnb.lottie.LottieAnimationView
 
 class AnimationStart() : Fragment() {
 
+    //Fragment to load and show start view
+    //Show which side is which.
+
     private lateinit var animationViewarrowPlayer: LottieAnimationView
     private lateinit var animationViewarrowComputerPlayer: LottieAnimationView
     private lateinit var playerAvatarView: ImageView
@@ -49,6 +52,7 @@ class AnimationStart() : Fragment() {
         setFrameAndAvatar(playerAvatarView, avatarLink)
         setFrameAndAvatar(computerPlayerAvatarView, "avatarrobot")
 
+        //Play animation
         playerAvatarView.isVisible = true
         startAnimation()
 

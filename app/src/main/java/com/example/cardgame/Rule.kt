@@ -15,7 +15,7 @@ class Rule() : DialogFragment() {
                 "These are the rules for the game.\n\n" +
                         "A single deck + 4 JOKER cards are divided into 3 equal piles, 2 cards are thrown away after shuffle to ensure 18 cards in each pile.\n\n" +
                         "The game is a simple card game where you guess if YOUR next cover card will be lower or higher than the dealer's next card.\n\n" +
-                        "You can also guess whether your next card will be a JOKER or EQUAL to dealer card.\n\n " +
+                        "You can also guess whether your next card will be a JOKER or EQUAL to dealer card.\n\n" +
                         "Joker also has the card value of 15, i.e it is the highest value in the deck\n" +
                         "These are obvious less likely to occur and therefore more valuable guesses\n\n" +
                         "• HIGHER/LOWER guess equals 1p\n" +

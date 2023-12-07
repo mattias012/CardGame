@@ -14,6 +14,7 @@ class Deck() {
     init {
         createMyDeck()
         theDeck.shuffle()
+        //Remove two cards after shuffle to be able to create 3 equal piles
         theDeck.removeAt(0)
         theDeck.removeAt(0)
         splitDeck()

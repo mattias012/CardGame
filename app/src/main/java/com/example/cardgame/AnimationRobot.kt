@@ -13,12 +13,12 @@ import com.airbnb.lottie.LottieAnimationView
 
 class AnimationRobot() : Fragment() {
 
+    //Fragment used when CardioBOT talks
     private lateinit var animationViewRobot: LottieAnimationView
     private lateinit var robotTextViewTalk: TextView
 
-
     //List of used punches..
-    val usedTalks = mutableListOf<String>()
+    private val usedTalks = mutableListOf<String>()
 
     override fun onCreateView(
 
@@ -42,7 +42,6 @@ class AnimationRobot() : Fragment() {
         animationViewRobot.cancelAnimation()
     }
     private fun talkRobot(){
-
 
         //Get punchline to display
         val punchLine = getRandomPunchLine(usedTalks)
@@ -68,7 +67,7 @@ class AnimationRobot() : Fragment() {
     }
 
     //Create punchlines, return a string that has not yet been shown, maximum 18 strings (18 cards)
-    fun getRandomPunchLine(usedTalks: List<String>): String {
+    private fun getRandomPunchLine(usedTalks: List<String>): String {
         val punchLines = listOf(
             "Yeay! I don't have much to say... blame the developer..",
             "I'm not a gambler, but I always bet on myself!",

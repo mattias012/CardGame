@@ -30,6 +30,8 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        //On load, highlight the current gameresult with a nice color, after a short delay display
+        //normal row color. This is used together with smoothScroll in winnerActivity
         val game = highscoreList[position]
         holder.itemView.apply {
             if (position % 2 == 0) {
@@ -45,7 +47,7 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
             }
             else {
                 if (game.timestamp == recentGameTimestamp) {
-                    setBackgroundColor(Color.YELLOW) // or any color you want
+                    setBackgroundColor(Color.parseColor("#FF007F")) // or any color you want
                     Handler(Looper.getMainLooper()).postDelayed({
                         setBackgroundColor(Color.WHITE) // or your default color
                     }, 2000)
@@ -56,6 +58,7 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
             }
         }
 
+        //Add medals to the top players
         when (position) {
             0 -> {
                 val resID = holder.itemView.resources.getIdentifier("gold", "drawable", holder.itemView.context.packageName)
@@ -73,6 +76,8 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
                 holder.prizeImageView?.isVisible = false
             }
         }
+
+        //Set results
         val gameresult = highscoreList[position]
 
         holder.rankTextView?.text = (position+1).toString() + "."
@@ -88,7 +93,6 @@ class HighscoreRecycleAdapter(val context: Context, val highscoreList : List<Gam
         val avatar = gameresult.avatar
         val resID = holder.itemView.resources.getIdentifier(avatar, "drawable", holder.itemView.context.packageName)
         holder.avatarImageView?.setBackgroundResource(resID)
-
     }
 
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){

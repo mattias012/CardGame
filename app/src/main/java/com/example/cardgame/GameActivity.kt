@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 
 class GameActivity : AppCompatActivity() {
 
-    val handler = Handler(Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
 
     private var selectedLockedAnswerButton: TextView? = null
     private var selectedAnswer: String = ""
@@ -132,10 +132,8 @@ class GameActivity : AppCompatActivity() {
         transaction.add(containerId, fragment, "$containerId")
         transaction.commit()
 
-        Log.d("!!!", "$isFragmentActive")
         if (containerId == (R.id.container_robot)){
             isFragmentActive = true
-            Log.d("!!!", "är nu $isFragmentActive")
         }
     }
 
@@ -260,6 +258,8 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //Function to remove the covercards one by one in order to show the amount of cards left to play.
+    //Maybe combine with a smooth animation in the future..
     private fun removeCoverCardsInDeck(listOfCoverCardsDeck: MutableList<ImageView>, listOfCoverCardsDeckComputer: MutableList<ImageView>, listOfCoverCardsDeckPlayer: MutableList<ImageView>) {
         if (computerDeck.isNotEmpty()) {
 
@@ -281,6 +281,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //Clear all variables and throw away cards (next round)
     private fun clearAnswer() {
 
         if (computerDeck.isNotEmpty()) {
@@ -309,6 +310,7 @@ class GameActivity : AppCompatActivity() {
             removeCoverCardsInDeck(dealerDeckCoverList, computerPlayerDeckCoverList, playerDeckCoverList)
         }
         else {
+            //At the end of the game
             endOfGame()
         }
     }
