@@ -202,7 +202,7 @@ class GameActivity : AppCompatActivity() {
                 if (isFragmentActive){
                     removeAnimationFragment(R.id.container_robot)
                 }
-            }, 4150)
+            }, 5150)
         }
 
         // add points to each player
